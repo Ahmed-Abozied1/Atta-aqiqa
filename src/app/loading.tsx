@@ -9,6 +9,6 @@ export default function Loading() {
         </div>
       </div>
       <p className="mt-4 text-sm font-medium text-gray-500">جاري التحميل...</p>
-    </div>
+    </div> 
   );
-}
+}  

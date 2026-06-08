@@ -12,7 +12,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 const sstArabic = localFont({
-  src: [
+  src: [   
     {
       path: "../../public/fonts/sst-arabic-roman.ttf",
       weight: "400",

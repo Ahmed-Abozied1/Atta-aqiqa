@@ -22,8 +22,8 @@ export default function UnauthorizedPage() {
             appVariant="secondary" asChild          >
             <Link href="/admin/login">
             تسجيل الدخول
-            </Link>
-          </AppButton>
+            </Link>  
+          </AppButton> 
         </div>
 
       </div>

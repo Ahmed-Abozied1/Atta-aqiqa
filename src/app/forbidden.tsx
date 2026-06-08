@@ -13,12 +13,11 @@ export default function ForbiddenPage() {
             يبدو أنك تحاول الوصول إلى قسم غير مخصص لحسابك الحالي. يرجى العودة للرئيسية أو التواصل مع الإدارة.
           </p>
         </div>
-
         <div className="flex flex-col gap-4 w-full justify-center items-center">
           <AppButton appVariant="secondary">
             <Link href="/">
               العودة للرئيسية
-            </Link>
+            </Link> 
           </AppButton>
         </div>
       </div>
