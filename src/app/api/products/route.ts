@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
         orderBy,
         select: {
           id: true,
+          slug: true,
           name: true,
           description: true,
           price: true,
