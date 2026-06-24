@@ -1,10 +1,10 @@
 export async function getData<T>(endpoint: string): Promise<T> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+  const baseUrl = typeof window === 'undefined'
+    ? (process.env.NEXT_PUBLIC_APP_URL || '')
+    : '';
 
   try {
-    const response = await fetch(`${baseUrl}/api/${endpoint}`, {
-      cache: "no-store",
-    });
+    const response = await fetch(`${baseUrl}/api/${endpoint}`);
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({
