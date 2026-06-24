@@ -1,46 +1,28 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Download, ChevronRight, ChevronLeft } from "lucide-react"
+import { ChevronRight, ChevronLeft } from "lucide-react"
 import { useOrders } from "../hooks/useOrders"
 import { OrdersTable } from "./OrdersTable"
 import { OrdersFilters } from "./OrdersFilters"
-import { prepareOrdersExportData, convertToCSV, downloadCSV } from "../utils/orders.utils"
-import { toast } from "sonner"
 import { SkeletonTable } from "@/components/common/SkeletonTable"
 
 export default function OrdersManagement() {
   const {
     orders,
-    allOrders,
     isLoading,
     filters,
-    selectedRows,
     currentPage,
     totalPages,
-    selectedOrder,
     itemsPerPage,
-    handleSelectAll,
-    handleSelectRow,
     resetFilters,
     updateFilter,
     setCurrentPage,
-    refetch,
     updateOrderStatus,
-    loadingId
-
+    deleteOrder,
+    loadingId,
   } = useOrders()
 
-  const handleExport = () => {
-    try {
-      const exportData = prepareOrdersExportData(allOrders)
-      const csv = convertToCSV(exportData)
-      downloadCSV(csv, 'orders.csv')
-      toast.success("تم تصدير البيانات بنجاح")
-    } catch {
-      toast.error("حدث خطأ أثناء تصدير البيانات")
-    }
-  }
 
 
 
@@ -55,15 +37,6 @@ export default function OrdersManagement() {
             onFilterChange={updateFilter}
             onReset={resetFilters}
           />
-
-          <Button
-            onClick={handleExport}
-            variant="outline"
-            className="border-[1.5px] text-small-bold! md:text-medium-bold! border-secondary text-secondary rounded-lg md:rounded-2xl gap-2 px-2! md:px-6! h-10 md:h-14"
-          >
-            <Download className="size-5 md:size-6" />
-            <span>تحميل</span>
-          </Button>
         </div>
 
 
@@ -72,12 +45,10 @@ export default function OrdersManagement() {
           ) : (
           <OrdersTable
             orders={orders}
-            selectedRows={selectedRows}
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
-            onSelectAll={handleSelectAll}
-            onSelectRow={handleSelectRow}
             onEdit={(order) => updateOrderStatus(order.id, "RECEIVED")}
+            onDelete={deleteOrder}
             loadingId={loadingId}
           />
           )}

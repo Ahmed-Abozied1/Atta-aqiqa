@@ -68,6 +68,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Account {
@@ -115,26 +117,35 @@ model Order {
   id              String      @id @default(cuid())
   orderNumber     Int         @unique @default(autoincrement())
   userId          String?
-  user   User? @relation(fields: [userId], references: [id])
+  user            User?       @relation(fields: [userId], references: [id])
   productId       String
   product         Product     @relation(fields: [productId], references: [id])
   status          OrderStatus @default(PENDING)
   totalPrice      Float
+  quantity        Int         @default(1)
   intent          IntentType
   beneficiaryName String
   phone           String
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([userId])
+  @@index([productId])
 }
 model Review {
-  id        String   @id @default(cuid())
-  rating    Int      
-  comment   String   @db.Text
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  productId String
-  product   Product  @relation(fields: [productId], references: [id])
-  isApproved Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  id         String   @id @default(cuid())
+  rating     Int
+  comment    String?  @db.Text
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([productId])
+  @@index([userId, productId])
 }

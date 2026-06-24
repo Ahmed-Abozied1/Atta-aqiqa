@@ -6,8 +6,8 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
 
-    const page = Number(searchParams.get("page") || 1);
-    const limit = Number(searchParams.get("limit") || 10);
+    const page = Math.max(1, Number(searchParams.get("page") || 1));
+    const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") || 10)));
 
     const location = searchParams.get("location"); 
     const search = searchParams.get("search") || "";
@@ -35,37 +35,36 @@ export async function GET(request: NextRequest) {
     if (sortBy === "oldest") orderBy = { createdAt: "asc" };
     if (sortBy === "price") orderBy = { price: "asc" };
 
-    const products = await prisma.product.findMany({
-      where,
-      skip: (page - 1) * limit,
-      take: limit,
-      orderBy,
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        price: true,
-        location: true,
-        beneficiaries: true,
-        imageUrl: true,
-        intents: true,
-        reviewsCount: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const [products, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy,
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          location: true,
+          beneficiaries: true,
+          imageUrl: true,
+          intents: true,
+          reviewsCount: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      }),
+      prisma.product.count({ where }),
+    ]);
 
-    const total = await prisma.product.count({ where });
-
-    return NextResponse.json({
-      data: products,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
+    return NextResponse.json(
+      {
+        data: products,
+        pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
       },
-    });
+      { headers: { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" } }
+    );
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch products" },
@@ -77,21 +76,30 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession();
-    if (!session || session.user.role !== "ADMIN") {
+    if (!session?.user || session.user.role !== "ADMIN") {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const body = await request.json();
 
-    if (!body.name || !body.price || !body.location) {
+    const validLocations = ["INSIDE_EGYPT", "OUTSIDE_EGYPT"];
+    const price = Number(body.price);
+
+    if (!body.name?.trim() || !body.location || !body.price) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+    if (!validLocations.includes(body.location)) {
+      return NextResponse.json({ error: "Invalid location" }, { status: 400 });
+    }
+    if (isNaN(price) || price <= 0) {
+      return NextResponse.json({ error: "Invalid price" }, { status: 400 });
     }
 
     const product = await prisma.product.create({
       data: {
-        name: body.name,
+        name: body.name.trim(),
         description: body.description || "",
-        price: Number(body.price),
+        price,
         location: body.location,
         beneficiaries: body.beneficiaries || "",
         intents: body.intents || [],

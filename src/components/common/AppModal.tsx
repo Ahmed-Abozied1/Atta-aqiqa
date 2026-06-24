@@ -1,5 +1,6 @@
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "../ui/dialog";
 import { Cancel } from "../ui/icons/Cancel";
+import { cn } from "@/lib/utils";
 
 interface AppModalProps {
     isOpen: boolean;
@@ -15,25 +16,10 @@ export const AppModal = ({ isOpen, onClose, title, children, className }: AppMod
             <DialogContent
                 showCloseButton={false}
                 dir="rtl"
-                className={`
-                  fixed! 
-          left-1/2! 
-          top-1/2! 
-          -translate-x-1/2! 
-          -translate-y-1/2!
-          mx-auto!
-          w-full
-          max-w-200!
-          sm:rounded-0!
-          sm:h-screen
-          max-h-[94vh]
-          rounded-2xl!
-          p-6 md:p-8!
-          bg-bg
-          border-0!
-          [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] overflow-y-auto
-                  ${className}
-                `}
+                className={cn(
+                  "fixed! left-1/2! top-1/2! -translate-x-1/2! -translate-y-1/2! mx-auto! w-full max-w-200! sm:rounded-0! sm:h-screen max-h-[94vh] rounded-2xl! p-6 md:p-8! bg-bg border-0! [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] overflow-y-auto",
+                  className
+                )}
             >
                 <div className="flex items-center justify-between mb-4">
                     {title && (

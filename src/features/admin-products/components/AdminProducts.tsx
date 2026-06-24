@@ -54,6 +54,7 @@ export default function AdminProducts() {
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
             onEdit={handleEdit}
+            onDeleteSuccess={refetch}
           />
         )}
 

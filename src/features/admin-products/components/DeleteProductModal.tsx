@@ -9,11 +9,12 @@ interface DeleteProductModalProps {
   data: {
     productId: string;
     productName: string;
+    onSuccess?: () => void;
   };
 }
 
 export const DeleteProductModal = ({ data }: DeleteProductModalProps) => {
-  const { productId, productName } = data;
+  const { productId, productName, onSuccess } = data;
   const { close } = useModalStore();
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +30,7 @@ export const DeleteProductModal = ({ data }: DeleteProductModalProps) => {
 
       toast.success("تم حذف المنتج بنجاح");
       close();
-      window.location.reload();
+      onSuccess?.();
     } catch (error) {
       console.error(error);
       toast.error("فشل في حذف المنتج");

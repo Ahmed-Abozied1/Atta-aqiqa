@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema, ProductFormData } from "../schemas/product.schema";
 import { Product } from "../types/admin-products.types";
 import { useModalStore } from "@/store/useModalStore";
+import { toast } from "sonner";
 import { AppButton } from "@/components/common/AppButton";
 import { FormInput } from "@/components/common/FormInput";
 import { FormTextarea } from "@/components/common/FormTextarea";
@@ -81,14 +82,15 @@ export function EditProductModal({ data }: EditProductModalProps) {
       });
 
       if (response.ok) {
+        toast.success("تم تحديث المنتج بنجاح");
         data.onSuccess?.();
         close();
       } else {
-        const error = await response.json();
-        console.error("Server error:", error);
+        const body = await response.json().catch(() => ({}));
+        toast.error(body?.error || "فشل تحديث المنتج");
       }
-    } catch (error) {
-      console.error("Submission error:", error);
+    } catch {
+      toast.error("حدث خطأ، تحقق من اتصالك وحاول مرة أخرى");
     } finally {
       setIsSubmitting(false);
     }

@@ -17,7 +17,7 @@ export default function Home() {
   const { products, loading: productsLoading, error: productsError, refetch: refetchProducts } = useProducts(activeTab);
   const { testimonials = [], loading: testimonialsLoading, error: testimonialsError, refetch: refetchTestimonials } = useTestimonial();
 
-  if (productsLoading || testimonialsLoading) {
+  if (testimonialsLoading) {
     return <Loading />;
   }
 

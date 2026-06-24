@@ -1,5 +1,4 @@
-// features/home/hooks/useProducts.ts
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { homeService } from '../services'
 import { Product } from '../types'
 
@@ -10,28 +9,50 @@ interface UseProductsReturn {
   refetch: () => void
 }
 
-export function useProducts(activeTab: 'inside' | 'outside'): UseProductsReturn {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+const cache = new Map<string, Product[]>()
 
-  const fetchProducts = useCallback(async () => {
+export function useProducts(activeTab: 'inside' | 'outside'): UseProductsReturn {
+  const [products, setProducts] = useState<Product[]>(() => cache.get(activeTab) || [])
+  const [loading, setLoading] = useState(!cache.has(activeTab))
+  const [error, setError] = useState<Error | null>(null)
+  const activeTabRef = useRef(activeTab)
+
+  const fetchProducts = useCallback(async (tab: 'inside' | 'outside', force = false) => {
+    if (!force && cache.has(tab)) {
+      setProducts(cache.get(tab)!)
+      setLoading(false)
+      return
+    }
     setLoading(true)
     setError(null)
     try {
-      const data = await homeService.fetchProducts(activeTab)
-      setProducts(data || [])
+      const data = await homeService.fetchProducts(tab)
+      const result = data || []
+      cache.set(tab, result)
+      if (activeTabRef.current === tab) {
+        setProducts(result)
+      }
     } catch (err) {
-      setError(err as Error)
-      setProducts([])
+      if (activeTabRef.current === tab) {
+        setError(err as Error)
+        setProducts([])
+      }
     } finally {
-      setLoading(false)
+      if (activeTabRef.current === tab) {
+        setLoading(false)
+      }
     }
-  }, [activeTab])
+  }, [])
 
   useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
+    activeTabRef.current = activeTab
+    if (cache.has(activeTab)) {
+      setProducts(cache.get(activeTab)!)
+      setLoading(false)
+    } else {
+      fetchProducts(activeTab)
+    }
+  }, [activeTab, fetchProducts])
 
-  return { products, loading, error, refetch: fetchProducts }
+  return { products, loading, error, refetch: () => fetchProducts(activeTab, true) }
 }

@@ -7,10 +7,10 @@ export async function GET() {
     const testimonials = await prisma.review.findMany({
       where: {
         rating: { gte: 4 },
+        isApproved: true,
       },
       include: {
-        user: true,
-        product: true,
+        user: { select: { name: true } },
       },
       take: 10,
       orderBy: {
@@ -26,7 +26,9 @@ export async function GET() {
       date: review.createdAt,
     }));
 
-    return NextResponse.json(formattedTestimonials);
+    return NextResponse.json(formattedTestimonials, {
+      headers: { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" },
+    });
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch testimonials" }, { status: 500 });
   }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
 import { OrderStatus } from "@/generated/prisma/enums";
@@ -13,8 +14,8 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    const page = Number(searchParams.get("page") || 1);
-    const limit = Number(searchParams.get("limit") || 10);
+    const page = Math.max(1, Number(searchParams.get("page") || 1));
+    const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") || 10)));
     const skip = (page - 1) * limit;
 
     const searchTerm = searchParams.get("searchTerm") || "";
@@ -96,12 +97,10 @@ export async function GET(request: NextRequest) {
       prisma.order.count({ where }),
     ]);
 
-    return NextResponse.json({
-      orders,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-      totalOrders: total,
-    });
+    return NextResponse.json(
+      { orders, totalPages: Math.ceil(total / limit), currentPage: page, totalOrders: total },
+      { headers: { "Cache-Control": "private, max-age=15, stale-while-revalidate=30" } }
+    );
   } catch (error) {
     console.error("Error fetching orders:", error);
     return NextResponse.json(
@@ -113,7 +112,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession();
     const body = await request.json();
 
     const {
@@ -122,28 +120,39 @@ export async function POST(request: NextRequest) {
       beneficiaryName,
       phone,
       quantity = 1,
+      price,
     } = body;
 
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-    });
+    const validIntents = ["SADAKA", "AQEEQA", "NAZR", "ADHIYA", "KAFFARA", "BUY"];
+    const parsedQty = Number(quantity);
 
-    if (!product) {
-      return NextResponse.json(
-        { error: "المنتج غير موجود" },
-        { status: 404 }
-      );
+    if (!productId || !intent || !validIntents.includes(intent) || !beneficiaryName || !phone) {
+      return NextResponse.json({ error: "بيانات مطلوبة ناقصة" }, { status: 400 });
+    }
+    if (!Number.isInteger(parsedQty) || parsedQty < 1 || parsedQty > 100) {
+      return NextResponse.json({ error: "الكمية غير صحيحة" }, { status: 400 });
     }
 
-    const totalPrice = product.price * Number(quantity);
+    // Fetch price from DB — never trust client-supplied price
+    const product = await prisma.product.findUnique({ where: { id: productId }, select: { price: true } });
+    if (!product) {
+      return NextResponse.json({ error: "المنتج غير موجود" }, { status: 404 });
+    }
+
+    const cookieStore = await cookies();
+    const hasSession = cookieStore.has("better-auth.session_token");
+    const session = hasSession ? await getServerSession() : null;
+
+    const totalPrice = Math.round(product.price * parsedQty * 100) / 100;
 
     const order = await prisma.order.create({
       data: {
         ...(session?.user?.id ? { userId: session.user.id } : {}),
         productId,
         intent,
-        beneficiaryName,
+        beneficiaryName: beneficiaryName.trim(),
         phone,
+        quantity: parsedQty,
         totalPrice,
         status: OrderStatus.PENDING,
       },

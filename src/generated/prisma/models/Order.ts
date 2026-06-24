@@ -29,11 +29,13 @@ export type AggregateOrder = {
 export type OrderAvgAggregateOutputType = {
   orderNumber: number | null
   totalPrice: number | null
+  quantity: number | null
 }
 
 export type OrderSumAggregateOutputType = {
   orderNumber: number | null
   totalPrice: number | null
+  quantity: number | null
 }
 
 export type OrderMinAggregateOutputType = {
@@ -43,6 +45,7 @@ export type OrderMinAggregateOutputType = {
   productId: string | null
   status: $Enums.OrderStatus | null
   totalPrice: number | null
+  quantity: number | null
   intent: $Enums.IntentType | null
   beneficiaryName: string | null
   phone: string | null
@@ -57,6 +60,7 @@ export type OrderMaxAggregateOutputType = {
   productId: string | null
   status: $Enums.OrderStatus | null
   totalPrice: number | null
+  quantity: number | null
   intent: $Enums.IntentType | null
   beneficiaryName: string | null
   phone: string | null
@@ -71,6 +75,7 @@ export type OrderCountAggregateOutputType = {
   productId: number
   status: number
   totalPrice: number
+  quantity: number
   intent: number
   beneficiaryName: number
   phone: number
@@ -83,11 +88,13 @@ export type OrderCountAggregateOutputType = {
 export type OrderAvgAggregateInputType = {
   orderNumber?: true
   totalPrice?: true
+  quantity?: true
 }
 
 export type OrderSumAggregateInputType = {
   orderNumber?: true
   totalPrice?: true
+  quantity?: true
 }
 
 export type OrderMinAggregateInputType = {
@@ -97,6 +104,7 @@ export type OrderMinAggregateInputType = {
   productId?: true
   status?: true
   totalPrice?: true
+  quantity?: true
   intent?: true
   beneficiaryName?: true
   phone?: true
@@ -111,6 +119,7 @@ export type OrderMaxAggregateInputType = {
   productId?: true
   status?: true
   totalPrice?: true
+  quantity?: true
   intent?: true
   beneficiaryName?: true
   phone?: true
@@ -125,6 +134,7 @@ export type OrderCountAggregateInputType = {
   productId?: true
   status?: true
   totalPrice?: true
+  quantity?: true
   intent?: true
   beneficiaryName?: true
   phone?: true
@@ -226,6 +236,7 @@ export type OrderGroupByOutputType = {
   productId: string
   status: $Enums.OrderStatus
   totalPrice: number
+  quantity: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -263,6 +274,7 @@ export type OrderWhereInput = {
   productId?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFilter<"Order"> | number
+  quantity?: Prisma.IntFilter<"Order"> | number
   intent?: Prisma.EnumIntentTypeFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringFilter<"Order"> | string
   phone?: Prisma.StringFilter<"Order"> | string
@@ -279,6 +291,7 @@ export type OrderOrderByWithRelationInput = {
   productId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPrice?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -298,6 +311,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   productId?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFilter<"Order"> | number
+  quantity?: Prisma.IntFilter<"Order"> | number
   intent?: Prisma.EnumIntentTypeFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringFilter<"Order"> | string
   phone?: Prisma.StringFilter<"Order"> | string
@@ -314,6 +328,7 @@ export type OrderOrderByWithAggregationInput = {
   productId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPrice?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -336,6 +351,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   productId?: Prisma.StringWithAggregatesFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   totalPrice?: Prisma.FloatWithAggregatesFilter<"Order"> | number
+  quantity?: Prisma.IntWithAggregatesFilter<"Order"> | number
   intent?: Prisma.EnumIntentTypeWithAggregatesFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringWithAggregatesFilter<"Order"> | string
   phone?: Prisma.StringWithAggregatesFilter<"Order"> | string
@@ -348,6 +364,7 @@ export type OrderCreateInput = {
   orderNumber?: number
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -364,6 +381,7 @@ export type OrderUncheckedCreateInput = {
   productId: string
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -375,6 +393,7 @@ export type OrderUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -391,6 +410,7 @@ export type OrderUncheckedUpdateInput = {
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -405,6 +425,7 @@ export type OrderCreateManyInput = {
   productId: string
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -416,6 +437,7 @@ export type OrderUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -430,6 +452,7 @@ export type OrderUncheckedUpdateManyInput = {
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -454,6 +477,7 @@ export type OrderCountOrderByAggregateInput = {
   productId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPrice?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -464,6 +488,7 @@ export type OrderCountOrderByAggregateInput = {
 export type OrderAvgOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   totalPrice?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
 }
 
 export type OrderMaxOrderByAggregateInput = {
@@ -473,6 +498,7 @@ export type OrderMaxOrderByAggregateInput = {
   productId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPrice?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -487,6 +513,7 @@ export type OrderMinOrderByAggregateInput = {
   productId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   totalPrice?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -497,6 +524,7 @@ export type OrderMinOrderByAggregateInput = {
 export type OrderSumOrderByAggregateInput = {
   orderNumber?: Prisma.SortOrder
   totalPrice?: Prisma.SortOrder
+  quantity?: Prisma.SortOrder
 }
 
 export type OrderCreateNestedManyWithoutUserInput = {
@@ -596,6 +624,7 @@ export type OrderCreateWithoutUserInput = {
   orderNumber?: number
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -610,6 +639,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   productId: string
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -653,6 +683,7 @@ export type OrderScalarWhereInput = {
   productId?: Prisma.StringFilter<"Order"> | string
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFilter<"Order"> | number
+  quantity?: Prisma.IntFilter<"Order"> | number
   intent?: Prisma.EnumIntentTypeFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringFilter<"Order"> | string
   phone?: Prisma.StringFilter<"Order"> | string
@@ -665,6 +696,7 @@ export type OrderCreateWithoutProductInput = {
   orderNumber?: number
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -679,6 +711,7 @@ export type OrderUncheckedCreateWithoutProductInput = {
   userId?: string | null
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -718,6 +751,7 @@ export type OrderCreateManyUserInput = {
   productId: string
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -729,6 +763,7 @@ export type OrderUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -743,6 +778,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -756,6 +792,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   productId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -769,6 +806,7 @@ export type OrderCreateManyProductInput = {
   userId?: string | null
   status?: $Enums.OrderStatus
   totalPrice: number
+  quantity?: number
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
@@ -780,6 +818,7 @@ export type OrderUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -794,6 +833,7 @@ export type OrderUncheckedUpdateWithoutProductInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -807,6 +847,7 @@ export type OrderUncheckedUpdateManyWithoutProductInput = {
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   totalPrice?: Prisma.FloatFieldUpdateOperationsInput | number
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -823,6 +864,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   productId?: boolean
   status?: boolean
   totalPrice?: boolean
+  quantity?: boolean
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
@@ -839,6 +881,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   productId?: boolean
   status?: boolean
   totalPrice?: boolean
+  quantity?: boolean
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
@@ -855,6 +898,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   productId?: boolean
   status?: boolean
   totalPrice?: boolean
+  quantity?: boolean
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
@@ -871,6 +915,7 @@ export type OrderSelectScalar = {
   productId?: boolean
   status?: boolean
   totalPrice?: boolean
+  quantity?: boolean
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
@@ -878,7 +923,7 @@ export type OrderSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "userId" | "productId" | "status" | "totalPrice" | "intent" | "beneficiaryName" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "userId" | "productId" | "status" | "totalPrice" | "quantity" | "intent" | "beneficiaryName" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -905,6 +950,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     productId: string
     status: $Enums.OrderStatus
     totalPrice: number
+    quantity: number
     intent: $Enums.IntentType
     beneficiaryName: string
     phone: string
@@ -1341,6 +1387,7 @@ export interface OrderFieldRefs {
   readonly productId: Prisma.FieldRef<"Order", 'String'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly totalPrice: Prisma.FieldRef<"Order", 'Float'>
+  readonly quantity: Prisma.FieldRef<"Order", 'Int'>
   readonly intent: Prisma.FieldRef<"Order", 'IntentType'>
   readonly beneficiaryName: Prisma.FieldRef<"Order", 'String'>
   readonly phone: Prisma.FieldRef<"Order", 'String'>

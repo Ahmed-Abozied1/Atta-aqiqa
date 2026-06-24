@@ -11,6 +11,7 @@ import { INTENT_LABELS } from "../constants";
 import { Star } from "@/components/ui/icons/Star";
 import { ProductQuantity } from "@/components/common/ProductQuantity";
 import { Product } from "../types/product.types";
+import { initiateCheckout } from "@/lib/pixel";
 
 type Intention = "SADAKA" | "AQEEQA" | "NAZR" | "KAFFARA" | "ADHIYA" | "BUY";
 
@@ -72,11 +73,19 @@ export const ProductOverview = ({ product }: ProductOverviewProps) => {
 
     setLoadingParts(true);
 
+    initiateCheckout({
+      content_name: product.name,
+      content_ids: [product.id],
+      value: product.price * quantity,
+      num_items: quantity,
+    });
+
     open("BOOKING", {
       productId: product.id,
       productName: product.name,
       productType: selectedIntention,
       price: product.price,
+      location: product.location,
       imageUrl: product.imageUrl || undefined,
       intent: selectedIntention,
       quantity,

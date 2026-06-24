@@ -101,7 +101,7 @@ const OrdersMobileViewComponent = ({
               <div className="flex gap-2 items-center py-2 mr-16">
                 <span className="text-small-bold text-title">السعر</span>
                 <span className="text-small-normal text-paragraph">
-                  {order.totalPrice.toLocaleString()} ج.م
+                  {order.totalPrice.toLocaleString('en-US')} ج.م
                 </span>
               </div>
               <div className="flex gap-2 items-center py-2 mr-16">

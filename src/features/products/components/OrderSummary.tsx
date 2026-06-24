@@ -11,101 +11,79 @@ interface OrderSummaryProps {
   phone: PhoneObject;
 }
 
-const getBookingTypeLabel = (
-  productName: string,
-  location: string,
-  intent: string
-) => {
-  const locationLabel =
-    location === "INSIDE_EGYPT" ? "داخل مصر" : "خارج مصر";
-
-  const intentMap: Record<string, string> = {
-    ADHIYA: "أضحية",
-    SADAKA: "صدقة",
-    AQEEQA: "عقيقة",
-    NAZR: "نذر",
-    KAFFARA: "كفارة",
-  };
-
-  const intentLabel = intentMap[intent] || "أضحية";
-
-  return `${productName} ${intentLabel} ${locationLabel}`;
+const intentMap: Record<string, string> = {
+  ADHIYA: "أضحية",
+  SADAKA: "صدقة",
+  AQEEQA: "عقيقة",
+  NAZR: "نذر",
+  KAFFARA: "كفارة",
 };
 
-export const OrderSummary = ({
-  data,
-  name,
-  quantity,
-  phone,
-}: OrderSummaryProps) => {
+export const OrderSummary = ({ data, name, quantity, phone }: OrderSummaryProps) => {
   const productName = data?.productName || "خروف";
   const location = data?.location || "INSIDE_EGYPT";
   const intent = data?.intent || "ADHIYA";
-
   const unitPrice = data?.price ?? 0;
-
   const safeQuantity = Math.max(1, Math.floor(quantity));
-
   const totalPrice = unitPrice * safeQuantity;
-
-  const bookingType = getBookingTypeLabel(
-    productName,
-    location,
-    intent
-  );
-
+  const locationLabel = location === "INSIDE_EGYPT" ? "داخل مصر" : "أفريقيا";
+  const intentLabel = intentMap[intent] || "أضحية";
   const phoneString = `${phone.country}${phone.number}`;
+
+  const rows = [
+    { label: "اسم المستفيد", value: name || "غير محدد" },
+    { label: "رقم الواتساب", value: phoneString, ltr: true },
+    { label: "نوع النية", value: intentLabel },
+    { label: "مكان التنفيذ", value: locationLabel },
+    { label: "الذبيحة", value: productName },
+    { label: "السعر", value: `${unitPrice.toLocaleString('en-US')} ج.م` },
+    { label: "الكمية", value: safeQuantity.toString() },
+  ];
 
   return (
     <div className="flex-1">
       <ModalHeader
         title="ملخص الطلب"
-        description="تأكد من صحة جميع التفاصيل قبل تأكيد الطلب لضمان تنفيذ الأضحية بالشكل الصحيح."
+        description="أكد من صحة جميع التفاصيل قبل تأكيد الطلب لضمان تنفيذ الحجز بالشكل الصحيح."
       />
 
-      <div className="flex flex-col md:flex-row gap-4 p-2 md:p-4 md:border border-border rounded-lg md:rounded-2xl bg-bg">
-        <div className="relative w-full h-48 md:h-auto md:w-50 md:min-h-full shrink-0 overflow-hidden">
+      <div className="flex flex-col md:flex-row gap-4 p-3 md:p-5 border border-border rounded-2xl bg-bg mt-2">
+        <div className="relative w-full h-48 md:h-auto md:w-44 shrink-0 overflow-hidden rounded-xl">
           <Image
             src={data?.imageUrl || "/images/products/sheep.webp"}
             alt={productName}
             fill
-            className="object-contain rounded-lg"
+            className="object-contain"
           />
         </div>
 
-        <div className="flex flex-col gap-2 md:gap-4">
-          <div className="space-y-2 text-regular-normal md:text-large-normal text-paragraph">
-            <p>
-              الاسم: <span className="text-title">{name || "غير محدد"}</span>
-            </p>
-
-            <p>
-              رقم الواتساب:{" "}
-              <span className="text-title" dir="ltr">{phoneString || "غير محدد"}</span>
-            </p>
-
-            <p>
-              نوع الحجز:{" "}
-              <span className="text-title">{bookingType}</span>
-            </p>
-
-            <p>
-              سعر الوحدة:{" "}
-              <span className="text-title">
-                {unitPrice.toLocaleString()} ج.م
-              </span>
-            </p>
-
-            <div className="flex items-center gap-4 mt-2">
-              <span className="text-paragraph">الكمية:</span>
-              <span className="text-title">{safeQuantity}</span>
+        <div className="flex flex-col flex-1 gap-0">
+          {rows.map((row, i) => (
+            <div key={row.label}>
+              <div className="flex items-center justify-between py-3 px-1">
+                <span className="text-small-normal md:text-regular-normal text-paragraph">
+                  {row.label}
+                </span>
+                <span
+                  className="text-small-bold md:text-regular-bold text-title"
+                  dir={row.ltr ? "ltr" : undefined}
+                >
+                  {row.value}
+                </span>
+              </div>
+              {i < rows.length - 1 && (
+                <div className="border-t border-border" />
+              )}
             </div>
-          </div>
+          ))}
 
-          <div>
-            <p className="text-medium-bold md:heading-6-bold text-primary">
-              إجمالي المبلغ: {totalPrice.toLocaleString()} ج.م
-            </p>
+          <div className="mt-3 pt-3 border-t-2 border-primary flex items-center justify-between px-1">
+            <span className="text-regular-bold md:heading-6-bold text-primary">
+              إجمالي المبلغ
+            </span>
+            <span className="text-regular-bold md:heading-6-bold text-primary">
+              {totalPrice.toLocaleString('en-US')} ج.م
+            </span>
           </div>
         </div>
       </div>

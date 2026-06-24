@@ -40,6 +40,7 @@ export interface CreateOrderPayload {
   beneficiaryName: string;
   phone: string;
   quantity: number;
+  price: number;
 }
 
 export interface PhoneObject {

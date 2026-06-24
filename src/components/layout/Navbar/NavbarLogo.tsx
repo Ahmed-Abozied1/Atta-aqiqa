@@ -11,4 +11,4 @@ export const NavbarLogo = () => (
             className="w-[2.138rem] md:w-[2.85rem] h-12 block"
         />
     </Link>
-);
+); 

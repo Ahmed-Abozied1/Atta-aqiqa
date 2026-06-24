@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -9,7 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { Order } from "../types/orders.types";
 import { formatOrderDate, getIntentLabel } from "../utils/orders.utils";
 import { STATUS_COLORS, STATUS_LABELS } from "../constants";
@@ -18,43 +26,22 @@ import { cn } from "@/lib/utils";
 
 interface OrdersTableProps {
   orders: Order[];
-  selectedRows: string[];
   currentPage: number;
   itemsPerPage: number;
-  onSelectAll: (checked: boolean) => void;
-  onSelectRow: (id: string, checked: boolean) => void;
   onEdit: (order: Order) => void;
+  onDelete: (id: string) => void;
   loadingId?: string | null;
 }
 
 export function OrdersTable({
   orders,
-  selectedRows,
   currentPage,
   itemsPerPage,
-  onSelectAll,
-  onSelectRow,
   onEdit,
+  onDelete,
   loadingId,
 }: OrdersTableProps) {
-  const handleSelectAll = useCallback(
-    (checked: boolean | string) => {
-      onSelectAll(checked === true);
-    },
-    [onSelectAll]
-  );
-
-  const handleSelectRow = useCallback(
-    (id: string) => (checked: boolean | string) => {
-      onSelectRow(id, checked === true);
-    },
-    [onSelectRow]
-  );
-
-  const allSelected =
-    orders.length > 0 && selectedRows.length === orders.length;
-  const someSelected =
-    selectedRows.length > 0 && selectedRows.length < orders.length;
+  const [confirmId, setConfirmId] = useState<string | null>(null);
 
   return (
     <div className="w-full" dir="rtl">
@@ -62,33 +49,20 @@ export function OrdersTable({
         <Table className="min-w-max hidden md:table">
           <TableHeader className="bg-card">
             <TableRow className="border-none hover:bg-transparent">
-              <TableHead className="flex items-center gap-3 pr-6! py-4.75! text-right">
-                <Checkbox
-                  checked={
-                    allSelected ? true : someSelected ? "indeterminate" : false
-                  }
-                  onCheckedChange={handleSelectAll}
-                  className="bg-bg! data-[state=checked]:bg-secondary! data-[state=checked]:border-secondary! data-[state=checked]:text-bg! w-4 h-4!"
-                />
+              <TableHead className="pr-6! py-4.75! text-right">
                 <span className="text-secondary heading-6-bold">#</span>
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
-                اسم المستخدم
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                البريد الإلكتروني
+                اسم العميل
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
                 رقم الهاتف
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
-                العنوان
+                مكان التنفيذ
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
-                النطاق
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                المنتج
+                نوع الذبيحة
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
                 نوع الحجز
@@ -102,6 +76,9 @@ export function OrdersTable({
               <TableHead className="py-4.75 text-title text-center font-bold">
                 الإجراءات
               </TableHead>
+              <TableHead className="py-4.75 text-title text-center font-bold w-16">
+                حذف
+              </TableHead>
             </TableRow>
           </TableHeader>
 
@@ -112,26 +89,17 @@ export function OrdersTable({
                 className="border-b border-border h-16! text-paragraph! text-medium-normal text-center"
               >
                 <TableCell className="pr-6!">
-                  <div className="flex items-center gap-3">
-                    <Checkbox
-                      checked={selectedRows.includes(order.id)}
-                      onCheckedChange={handleSelectRow(order.id)}
-                      className="bg-bg! data-[state=checked]:bg-secondary! data-[state=checked]:border-secondary! data-[state=checked]:text-bg! w-4! h-4!"
-                    />
-                    <span className="text-regular-normal text-title">
-                      {index + 1 + (currentPage - 1) * itemsPerPage}
-                    </span>
-                  </div>
+                  <span className="text-regular-normal text-title">
+                    {index + 1 + (currentPage - 1) * itemsPerPage}
+                  </span>
                 </TableCell>
 
                 <TableCell>{order.beneficiaryName || "زائر"}</TableCell>
-                <TableCell className="ltr">{order.user?.email || "غير مسجل"}</TableCell>
-                <TableCell className="ltr"dir="ltr">{order.phone}</TableCell>
-                <TableCell>{order.address || "العنوان"}</TableCell>
+                <TableCell className="ltr" dir="ltr">{order.phone}</TableCell>
                 <TableCell>
                   {order.product?.location === "INSIDE_EGYPT"
                     ? "داخل مصر"
-                    : "خارج مصر"}
+                    : "أفريقيا"}
                 </TableCell>
                 <TableCell>{order.product?.name}</TableCell>
                 <TableCell>{getIntentLabel(order.intent)}</TableCell>
@@ -159,57 +127,76 @@ export function OrdersTable({
                     تم الاستلام
                   </AppButton>
                 </TableCell>
+                <TableCell className="w-16 text-center">
+                  <button
+                    onClick={() => setConfirmId(order.id)}
+                    disabled={loadingId === order.id}
+                    className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 disabled:opacity-40 transition-all cursor-pointer mx-auto flex items-center justify-center"
+                  >
+                    <Trash2 size={22} />
+                  </button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
 
+      <Dialog open={!!confirmId} onOpenChange={() => setConfirmId(null)}>
+        <DialogContent dir="rtl" className="max-w-sm rounded-2xl p-0 overflow-hidden bg-white">
+          <div className="flex flex-col items-center gap-4 px-6 pt-8 pb-2 text-center">
+            <div className="bg-red-100 p-4 rounded-full">
+              <Trash2 size={28} className="text-red-500" />
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-lg font-bold text-title">تأكيد الحذف</DialogTitle>
+            </DialogHeader>
+            <p className="text-paragraph text-sm leading-relaxed">
+              هل أنت متأكد من حذف هذا الطلب نهائياً؟<br />
+              <span className="text-red-500 font-medium">لا يمكن التراجع عن هذا الإجراء.</span>
+            </p>
+          </div>
+          <DialogFooter className="flex flex-row-reverse gap-2 px-6 py-4 border-t border-border mt-2">
+            <Button
+              className="flex-1 rounded-xl bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+              onClick={() => { onDelete(confirmId!); setConfirmId(null); }}
+            >
+              نعم، احذف
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 rounded-xl cursor-pointer"
+              onClick={() => setConfirmId(null)}
+            >
+              إلغاء
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="md:hidden mt-4">
         <div className="flex items-center bg-card py-4 px-2 rounded-xl">
-          <div className="flex items-center">
-            <Checkbox />
-            <span className="text-secondary heading-6-bold block w-8 text-center">
-              #
-            </span>
-          </div>
-          <span className="text-title text-regular-bold mr-2">
-            اسم المستخدم
-          </span>
+          <span className="text-secondary heading-6-bold block w-8 text-center">#</span>
+          <span className="text-title text-regular-bold mr-2">اسم العميل</span>
         </div>
 
         {orders.map((order, index) => (
           <div key={order.id} className="border-b border-border px-2">
-            <div className="flex items-center justify-between py-2 h-14">
-              <div className="flex items-center">
-                <Checkbox
-                  checked={selectedRows.includes(order.id)}
-                  onCheckedChange={(c) => onSelectRow(order.id, !!c)}
-                />
-                <span className="text-title w-8 block text-center">
-                  {index + 1 + (currentPage - 1) * itemsPerPage}
-                </span>
-                <span className="text-title mr-2">
-                  {order.beneficiaryName || "زائر"}
-                </span>
-              </div>
+            <div className="flex items-center py-2 h-14">
+              <span className="text-title w-8 block text-center">
+                {index + 1 + (currentPage - 1) * itemsPerPage}
+              </span>
+              <span className="text-title mr-2">
+                {order.beneficiaryName || "زائر"}
+              </span>
             </div>
 
-            <div className="mr-16 pb-2 space-y-2">
-              <div className="flex gap-2 items-center flex-wrap">
-                <span className="text-small-bold text-title">
-                  البريد الإلكتروني
-                </span>
-                <span className="text-small-normal text-paragraph">
-                  {order.user?.email || "غير مسجل"}
-                </span>
-              </div>
-
+            <div className="mr-8 pb-2 space-y-2">
               <div className="flex gap-2 items-center flex-wrap">
                 <span className="text-small-bold text-title" dir="ltr">
                   رقم الهاتف
                 </span>
-                <span className="text-small-normal text-paragraph ltr" dir="ltr" >
+                <span className="text-small-normal text-paragraph ltr" dir="ltr">
                   {order.phone}
                 </span>
               </div>

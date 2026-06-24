@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
     }
 
     const searchParams = request.nextUrl.searchParams;
-    const page = Number(searchParams.get("page") || 1);
-    const limit = Number(searchParams.get("limit") || 10);
+    const page = Math.max(1, Number(searchParams.get("page") || 1));
+    const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") || 10)));
     const search = searchParams.get("search") || "";
     const rating = searchParams.get("rating");
     const approvalStatus = searchParams.get("approvalStatus") || "all";
@@ -29,7 +29,11 @@ export async function GET(request: NextRequest) {
     }
 
     if (rating && rating !== "all") {
-      where.rating = parseInt(rating);
+      const ratingNum = parseInt(rating);
+      if (![1, 2, 3, 4, 5].includes(ratingNum)) {
+        return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
+      }
+      where.rating = ratingNum;
     }
 
     if (approvalStatus === "approved") {
@@ -66,12 +70,10 @@ export async function GET(request: NextRequest) {
       prisma.review.count({ where }),
     ]);
 
-    return NextResponse.json({
-      reviews,
-      total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-    });
+    return NextResponse.json(
+      { reviews, total, totalPages: Math.ceil(total / limit), currentPage: page },
+      { headers: { "Cache-Control": "private, max-age=15, stale-while-revalidate=30" } }
+    );
   } catch (error) {
     console.error("Error fetching reviews:", error);
     return NextResponse.json(

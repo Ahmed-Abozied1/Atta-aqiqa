@@ -18,6 +18,7 @@ interface Props {
   currentPage: number;
   itemsPerPage: number;
   onEdit: (product: Product) => void;
+  onDeleteSuccess: () => void;
 }
 
 export function AdminProductsTable({
@@ -25,6 +26,7 @@ export function AdminProductsTable({
   currentPage,
   itemsPerPage,
   onEdit,
+  onDeleteSuccess,
 }: Props) {
   const { open } = useModalStore();
 
@@ -32,6 +34,7 @@ export function AdminProductsTable({
     open("ADMIN_PRODUCT_DELETE", {
       productId: product.id,
       productName: product.name,
+      onSuccess: onDeleteSuccess,
     });
   };
 

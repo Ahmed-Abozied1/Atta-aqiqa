@@ -80,7 +80,6 @@ export interface OrdersHookReturn extends OrdersState, OrdersActions {
 export interface ExportDataRow {
   'رقم الطلب': number;
   'العميل': string;
-  'البريد الإلكتروني': string;
   'رقم الهاتف': string;
   'المنتج': string;
   'النية': string;

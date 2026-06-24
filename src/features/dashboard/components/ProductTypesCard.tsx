@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useCardData } from "../hooks/useCardData"
+import { ReturnType_useCardData } from "../hooks/useCardData"
 import { Period } from "../types/dashboard.types"
 import {
   CHART_GRID_COLOR,
@@ -27,8 +27,10 @@ import {
   PRIMARY_COLOR,
 } from "../utils/dashboard.utils"
 
-export default function ProductTypesCard() {
-  const { period, productsData, isLoading, changePeriod } = useCardData()
+interface Props { cardData: ReturnType_useCardData }
+
+export default function ProductTypesCard({ cardData }: Props) {
+  const { period, productsData, isLoading, changePeriod } = cardData
   const [selectedBar, setSelectedBar] = useState(0)
 
   const handleBarHover = useCallback((_: unknown, index: number) => {
@@ -78,7 +80,7 @@ export default function ProductTypesCard() {
           <Skeleton className="h-6 w-24 rounded-md bg-card" />
       ) : (
           <span className="text-medium-bold md:heading-5-bold text-title">
-            {totalOrders?.toLocaleString()}
+            {totalOrders?.toLocaleString('en-US')}
           </span> 
       )}
   <span className="border border-success text-success px-2 py-1 rounded-2xl text-tiny-normal md:text-small-normal inline-block">
@@ -141,7 +143,7 @@ export default function ProductTypesCard() {
                         <p className="text-sm text-[#111827] font-medium">
                           عدد الطلبات:
                           <span className="font-bold">
-                            {payload[0].value?.toLocaleString()}
+                            {payload[0].value?.toLocaleString('en-US')}
                           </span>
                         </p>
                         <div className="absolute -bottom-1.5 right-1/2 translate-x-1/2 w-3 h-3 bg-white border-b border-r border-[#E3E7E5] rotate-45"></div>

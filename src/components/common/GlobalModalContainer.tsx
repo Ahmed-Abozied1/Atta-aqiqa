@@ -8,6 +8,7 @@ import { UserVerification } from '@/features/auth/components/user/UserVerificati
 import { VerifySuccess } from '@/features/auth/components/VerifySuccess';
 import { UpdatePasswordSuccess } from '@/features/auth/components/UpdatePasswordSuccess';
 import { BookingModal } from '@/features/products/components/BookingModal';
+import { BookingSuccess } from '@/features/products/components/BookingSuccess';
 import { ReviewModal } from '@/features/products/components/ReviewModal';
 import { AddProductModal } from "@/features/admin-products/components/AddProductModal";
 import { EditProductModal } from "@/features/admin-products/components/EditProductModal";
@@ -24,7 +25,8 @@ const viewMap = {
   VERIFICATION_SUCCESS: VerifySuccess,
   PASSWORD_UPDATED_SUCCESS: UpdatePasswordSuccess,
   BOOKING: BookingModal,
-  REVIEW: ReviewModal, 
+  BOOKING_SUCCESS: BookingSuccess,
+  REVIEW: ReviewModal,
   ADMIN_PRODUCT_CREATE: AddProductModal,
   ADMIN_PRODUCT_EDIT: EditProductModal,
   ADMIN_PRODUCT_DELETE: DeleteProductModal,
@@ -40,12 +42,14 @@ export const GlobalModalContainer = () => {
   const Component = viewMap[view as ViewKey] as any;
   
   const getModalClasses = () => {
-if (view === "ADMIN_PRODUCT_DELETE")
-  return "w-[280px] min-h-[160px] sm:w-[320px] md:w-[380px] lg:w-[420px]";
+    if (view === "ADMIN_PRODUCT_DELETE")
+      return "w-[280px] min-h-[160px] sm:w-[320px] md:w-[380px] lg:w-[420px]";
+    if (view === "BOOKING_SUCCESS")
+      return "max-w-sm! sm:h-auto! sm:rounded-2xl! max-h-fit! min-h-0! h-auto!";
   };
   
   const getModalTitle = () => {
-    if (view === 'BOOKING') return "أحجز أضحيتك";
+    if (view === 'BOOKING') return undefined;
     if (view === 'REVIEW') return "اكتب تقييمًا";
     if (view === "ADMIN_PRODUCT_CREATE") return "إضافة منتج جديد";
     if (view === "ADMIN_PRODUCT_EDIT") return "تعديل المنتج";

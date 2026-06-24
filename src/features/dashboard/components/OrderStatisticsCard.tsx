@@ -1,6 +1,6 @@
 "use client"
 
-import { useCardData } from "../hooks/useCardData"
+import { ReturnType_useCardData } from "../hooks/useCardData"
 import {
   AreaChart,
   Area,
@@ -26,8 +26,10 @@ import {
 } from "../utils/dashboard.utils"
 import { Period } from "../types/dashboard.types"
 
-export default function OrderStatisticsCard() {
-  const { period, ordersData, orderGrowth, isLoading, changePeriod } = useCardData()
+interface Props { cardData: ReturnType_useCardData }
+
+export default function OrderStatisticsCard({ cardData }: Props) {
+  const { period, ordersData, orderGrowth, isLoading, changePeriod } = cardData
 
   // التحقق من وجود بيانات (الـ API يرجع مصفوفة دائماً، لذا نفحص الطول)
   const hasData = ordersData && ordersData.length > 0 && ordersData.some(d => d.bookings > 0 || d.purchases > 0)
@@ -61,7 +63,7 @@ export default function OrderStatisticsCard() {
         </div>
       )  : (
           <div className="flex items-center gap-3">
-            <span className="text-medium-bold md:heading-5-bold text-title">{totalOrders.toLocaleString()}</span>
+            <span className="text-medium-bold md:heading-5-bold text-title">{totalOrders.toLocaleString('en-US')}</span>
             <span className={`border px-2 py-1 rounded-2xl text-tiny-normal ${isPositive ? "border-success text-success" : "border-error text-error"}`}>
               {isPositive ? "+" : ""}{orderGrowth || 0}%
             </span>

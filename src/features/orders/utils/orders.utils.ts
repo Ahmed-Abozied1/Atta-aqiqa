@@ -23,7 +23,6 @@ export const filterOrders = (orders: Order[], filters: OrdersFilters): Order[] =
     filtered = filtered.filter(order =>
       order.orderNumber.toString().includes(searchLower) ||
       order.user.name.toLowerCase().includes(searchLower) ||
-      order.user.email.toLowerCase().includes(searchLower) ||
       order.user.phone?.includes(filters.searchTerm) ||
       order.product.name.toLowerCase().includes(searchLower)
     )
@@ -40,7 +39,6 @@ export const prepareOrdersExportData = (orders: Order[]) => {
   return orders.map(order => ({
     'رقم الطلب': order.orderNumber,
     'العميل': order.user.name,
-    'البريد الإلكتروني': order.user.email,
     'رقم الهاتف': order.user.phone || '-',
     'المنتج': order.product.name,
     'النية': getIntentLabel(order.intent),

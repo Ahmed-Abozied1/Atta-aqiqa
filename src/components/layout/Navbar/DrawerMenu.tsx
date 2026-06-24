@@ -75,7 +75,7 @@ export const DrawerMenu = ({ isOpen, onClose, activeLink, onSelect }: Props) => 
           className={`block px-2 py-3 rounded-xl ${
             activeLink === link.name
               ? "bg-[#F3F8F5] text-primary font-bold"
-              : "text-title hover:bg-primary/10"
+              : "text-title hover:bg-primary/10" 
           }`}
         >
           {link.name}

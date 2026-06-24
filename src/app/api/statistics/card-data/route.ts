@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "@/lib/get-session";
 import { Period } from "@/features/dashboard/types/dashboard.types";
 
 export async function GET(request: NextRequest) {
   try {
+    const session = await getServerSession();
+    if (!session?.user || session.user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const period = (request.nextUrl.searchParams.get("period") || "weekly") as Period;
     const dateRange = getDateRange(period);
 
@@ -15,13 +21,10 @@ export async function GET(request: NextRequest) {
       calculateGrowth("order", dateRange),
     ]);
 
-    return NextResponse.json({
-      weeklyUsers,
-      weeklyOrders,
-      productTypes,
-      userGrowth,
-      orderGrowth,
-    });
+    return NextResponse.json(
+      { weeklyUsers, weeklyOrders, productTypes, userGrowth, orderGrowth },
+      { headers: { "Cache-Control": "private, max-age=30, stale-while-revalidate=60" } }
+    );
   } catch (error) {
     console.error("Card Data API Error:", error);
     return NextResponse.json({ error: "Failed to fetch card data" }, { status: 500 });
@@ -45,14 +48,11 @@ async function calculateGrowth(type: "user" | "order", dateRange: Date): Promise
   prevStart.setDate(prevStart.getDate() - 7)
   const previousWhere = { createdAt: { gte: prevStart, lt: dateRange } }
 
-  let current, previous
-  if (type === "user") {
-    current = await prisma.user.count({ where: currentWhere })
-    previous = await prisma.user.count({ where: previousWhere })
-  } else {
-    current = await prisma.order.count({ where: currentWhere })
-    previous = await prisma.order.count({ where: previousWhere })
-  }
+  const [current, previous] = await Promise.all(
+    type === "user"
+      ? [prisma.user.count({ where: currentWhere }), prisma.user.count({ where: previousWhere })]
+      : [prisma.order.count({ where: currentWhere }), prisma.order.count({ where: previousWhere })]
+  )
 
   if (previous === 0 && current === 0) return 0
   if (previous === 0 && current > 0) return Number(current.toFixed(2))
@@ -69,39 +69,46 @@ async function getWeeklyUsers(dateRange: Date) {
 }
 
 async function getWeeklyOrders(dateRange: Date) {
-  const orders = await prisma.order.findMany({ 
-    where: { createdAt: { gte: dateRange } }, 
-    select: { createdAt: true} 
+  const orders = await prisma.order.findMany({
+    where: { createdAt: { gte: dateRange } },
+    select: { createdAt: true, intent: true }
   });
-  return aggregateByDay(orders.map(o => ({ date: o.createdAt })), "orders");
+  return aggregateByDay(orders.map(o => ({ date: o.createdAt, intent: o.intent })), "orders");
 }
 
 function aggregateByDay(data: any[], kind: "users" | "orders") {
   const days = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
   const result = days.map(day => ({ name: day, users: 0, bookings: 0, purchases: 0 }));
-  
+
   data.forEach(item => {
     const dateValue = kind === "users" ? item : item.date;
     const dayIndex = new Date(dateValue).getDay();
     if (kind === "users") {
       result[dayIndex].users++;
     } else {
-      item.type === "BOOKING" ? result[dayIndex].bookings++ : result[dayIndex].purchases++;
+      item.intent === "BUY" ? result[dayIndex].purchases++ : result[dayIndex].bookings++;
     }
   });
   return result;
 }
 
 async function getProductTypes(dateRange: Date) {
-  const products = await prisma.product.findMany({
-    select: { 
-      name: true, 
-      orders: { where: { createdAt: { gte: dateRange } } } 
-    }
+  const grouped = await prisma.order.groupBy({
+    by: ["productId"],
+    where: { createdAt: { gte: dateRange } },
+    _count: { id: true },
+    orderBy: { _count: { id: "desc" } },
+    take: 5,
   });
-  return products
-    .map(p => ({ name: p.name, value: p.orders.length }))
-    .filter(p => p.value > 0)
-    .sort((a, b) => b.value - a.value)
-    .slice(0, 5);
+
+  if (grouped.length === 0) return [];
+
+  const productIds = grouped.map(g => g.productId);
+  const products = await prisma.product.findMany({
+    where: { id: { in: productIds } },
+    select: { id: true, name: true },
+  });
+
+  const nameMap = new Map(products.map(p => [p.id, p.name]));
+  return grouped.map(g => ({ name: nameMap.get(g.productId) ?? "منتج محذوف", value: g._count.id }));
 }

@@ -4,6 +4,7 @@ import { RegisterFormData } from "../schemas/register.schema";
 import { AuthService } from "../services/auth.service";
 import { toast } from "sonner";
 import { getAuthErrorMessage } from "@/lib/auth-error";
+import { completeRegistration } from "@/lib/pixel";
 
 export const useRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +28,7 @@ export const useRegister = () => {
         return;
       }
 
+      completeRegistration();
       setData({ email: data.email });
       setView("OTP_VERIFICATION");
       toast.success("تم إنشاء الحساب بنجاح، يرجى التحقق من بريدك");

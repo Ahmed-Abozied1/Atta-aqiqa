@@ -12,13 +12,13 @@ import {
 } from "@/components/ui/select";
 
 const countries = [
-  { code: "+20", label: "🇪🇬 +20" },
-  { code: "+966", label: "🇸🇦 +966" },
-  { code: "+971", label: "🇦🇪 +971" },
-  { code: "+965", label: "🇰🇼 +965" },
-  { code: "+974", label: "🇶🇦 +974" },
-  { code: "+973", label: "🇧🇭 +973" },
-  { code: "+962", label: "🇯🇴 +962" },
+  { code: "+20",  flag: "🇪🇬", name: "مصر" },
+  { code: "+966", flag: "🇸🇦", name: "السعودية" },
+  { code: "+971", flag: "🇦🇪", name: "الإمارات" },
+  { code: "+965", flag: "🇰🇼", name: "الكويت" },
+  { code: "+974", flag: "🇶🇦", name: "قطر" },
+  { code: "+973", flag: "🇧🇭", name: "البحرين" },
+  { code: "+962", flag: "🇯🇴", name: "الأردن" },
 ];
 
 interface PhoneInputFieldProps {
@@ -44,27 +44,27 @@ export function PhoneInputField({
         render={({ field }) => {
           const value = field.value || { country: "+20", number: "" };
 
+          const selected = countries.find((c) => c.code === value.country);
+
           return (
-            <div className="flex items-center w-full overflow-hidden rounded-lg border-[1.5px] border-border focus-within:border-primary transition">
+            <div className="flex items-center w-full overflow-hidden rounded-lg border-[1.5px] border-border focus-within:border-primary transition-colors">
               <Select
                 value={value.country}
-                onValueChange={(country) =>
-                  field.onChange({ ...value, country })
-                }
+                onValueChange={(country) => field.onChange({ ...value, country })}
               >
-                <SelectTrigger className="bg-transparent border-0 shadow-none outline-0! focus:ring-0! px-3">
+                <SelectTrigger className="shrink-0 w-20 h-12 bg-muted/40 border-0 shadow-none outline-0! focus:ring-0! px-3 gap-1 rounded-none text-sm font-medium">
                   <SelectValue>
-                    {
-                      countries.find((c) => c.code === value.country)
-                        ?.label
-                    }
+                    {selected?.code}
                   </SelectValue>
                 </SelectTrigger>
 
-                <SelectContent className="bg-bg border border-border!">
+                <SelectContent className="bg-bg border border-border!" dir="rtl">
                   {countries.map((c) => (
                     <SelectItem key={c.code} value={c.code}>
-                      {c.label}
+                      <span className="flex items-center gap-2">
+                        <span>{c.name}</span>
+                        <span className="text-muted-foreground text-xs">{c.code}</span>
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -78,11 +78,8 @@ export function PhoneInputField({
                 placeholder="أدخل رقم الهاتف"
                 value={value.number}
                 onChange={(e) => {
-                  const onlyNumbers = e.target.value.replace(/[^0-9]/g, '');
-                  field.onChange({
-                    ...value,
-                    number: onlyNumbers,
-                  });
+                  const onlyNumbers = e.target.value.replace(/[^0-9]/g, "");
+                  field.onChange({ ...value, number: onlyNumbers });
                 }}
                 className="flex-1 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 h-12 rounded-none placeholder:text-right!"
               />

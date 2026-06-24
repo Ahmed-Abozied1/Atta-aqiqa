@@ -4,18 +4,19 @@
 import { Users, ShoppingCart } from "lucide-react"
 import { StatCard } from "./StatCard"
 import { formatNumber } from "../utils/dashboard.utils"
-import { useCardData } from "../hooks/useCardData"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ReturnType_useCardData } from "../hooks/useCardData"
 
 interface StatsOverviewProps {
   totalUsers?: number
   totalOrders?: number
   isLoading?: boolean
+  cardData: ReturnType_useCardData
 }
 
-export default function StatsOverview({ totalUsers, totalOrders, isLoading }: StatsOverviewProps) {
-  const { usersData, ordersData, userGrowth, orderGrowth, isLoading: cardLoading } = useCardData()
-  
+export default function StatsOverview({ totalUsers, totalOrders, isLoading, cardData }: StatsOverviewProps) {
+  const { usersData, ordersData, userGrowth, orderGrowth, isLoading: cardLoading } = cardData
+
   const showLoading = isLoading || cardLoading
 
   const userChartData = usersData.map(item => ({

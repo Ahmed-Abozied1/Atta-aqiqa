@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 export async function GET() {
   try {
     const lastProduct = await prisma.product.findFirst({
+      where: { location: "OUTSIDE_EGYPT" },
       orderBy: { createdAt: "desc" },
       select: { id: true },
     });

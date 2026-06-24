@@ -10,8 +10,8 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get("page") || "1")
-    const limit = parseInt(searchParams.get("limit") || "10")
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"))
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "10")))
     const skip = (page - 1) * limit
     const searchTerm = searchParams.get("searchTerm") || ""
     const role = searchParams.get("role") || "all"
@@ -76,12 +76,10 @@ export async function GET(request: NextRequest) {
       prisma.user.count({ where }),
     ])
 
-    return NextResponse.json({
-      users,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-      totalUsers: total,
-    })
+    return NextResponse.json(
+      { users, totalPages: Math.ceil(total / limit), currentPage: page, totalUsers: total },
+      { headers: { "Cache-Control": "private, max-age=15, stale-while-revalidate=30" } }
+    )
   } catch {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }

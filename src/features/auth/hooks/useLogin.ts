@@ -18,7 +18,6 @@ export const useLogin = (role: UserRole) => {
     setEmailForVerification(null);
 
     const destination = role === "ADMIN" ? "/admin" : "/";
-console.log(role,destination)
     const response = await AuthService.signIn(
       values.email,
       values.password,
@@ -38,8 +37,7 @@ console.log(role,destination)
     }
 
     toast.success("تم تسجيل الدخول بنجاح");
-    console.log("Login successful, redirecting to:", destination,role);
-router.push(role === "ADMIN" ? "/admin" : "/");  
+    router.push(role === "ADMIN" ? "/admin" : "/");
 };
 
   const handleResendVerification = async (email: string) => {

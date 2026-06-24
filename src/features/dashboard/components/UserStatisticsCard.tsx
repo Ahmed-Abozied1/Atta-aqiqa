@@ -1,6 +1,6 @@
 "use client"
 
-import { useCardData } from "../hooks/useCardData"
+import { ReturnType_useCardData } from "../hooks/useCardData"
 import {
   BarChart,
   Bar,
@@ -27,8 +27,10 @@ import {
 } from "../utils/dashboard.utils"
 import { Period } from "../types/dashboard.types"
 
-export default function UserStatisticsCard() {
-  const { period, usersData, userGrowth, isLoading, changePeriod } = useCardData()
+interface Props { cardData: ReturnType_useCardData }
+
+export default function UserStatisticsCard({ cardData }: Props) {
+  const { period, usersData, userGrowth, isLoading, changePeriod } = cardData
 
   const hasData = usersData && usersData.length > 0
 
@@ -79,7 +81,7 @@ export default function UserStatisticsCard() {
       ) : (
         <div className="flex items-center gap-4">
           <span className="text-medium-bold md:heading-5-bold text-title">
-            {totalUsers?.toLocaleString()}
+            {totalUsers?.toLocaleString('en-US')}
           </span>
 
           <span
@@ -144,7 +146,7 @@ export default function UserStatisticsCard() {
                         <div className="bg-bg px-2.5 py-2.75 text-title text-small-medium rounded-lg">
                           عدد المستخدمين:
                           <span className="text-small-normal">
-                            {payload[0].value?.toLocaleString()}
+                            {payload[0].value?.toLocaleString('en-US')}
                           </span>
                         </div>
                         <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-6 rotate-45 bg-bg -z-10"></div>

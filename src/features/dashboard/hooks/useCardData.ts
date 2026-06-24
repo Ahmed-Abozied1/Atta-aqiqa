@@ -5,6 +5,8 @@ import { useState, useEffect, useCallback } from "react"
 import { Period, WeeklyDataPoint, ProductTypesData } from "../types/dashboard.types"
 import { dashboardService } from "../services/dashboard.service"
 
+export type ReturnType_useCardData = ReturnType<typeof useCardData>
+
 export function useCardData(initialPeriod: Period = "weekly") {
   const [period, setPeriod] = useState<Period>(initialPeriod)
   const [usersData, setUsersData] = useState<WeeklyDataPoint[]>([])

@@ -47,18 +47,6 @@ export function useOrders() {
         filters.sortBy
       );
       setData(response);
-      
-      const allResponse = await ordersService.fetchAll(
-        1,
-        1000,
-        debouncedSearch,
-        filters.status,
-        filters.orderType,
-        filters.bookingType,
-        filters.scope,
-        filters.sortBy
-      );
-      setAllOrders(allResponse.orders);
     } catch {
       toast.error('حدث خطأ في تحميل الطلبات');
     } finally {
@@ -74,20 +62,61 @@ export function useOrders() {
     filters.sortBy,
   ]);
 
+  const deleteOrder = useCallback(async (id: string) => {
+    const previous = data;
+    setData((prev) =>
+      prev ? { ...prev, orders: prev.orders.filter((o) => o.id !== id) } : prev
+    );
+    try {
+      await ordersService.deleteOrder(id);
+      toast.success('تم حذف الطلب بنجاح');
+    } catch {
+      setData(previous);
+      toast.error('فشل حذف الطلب');
+    }
+  }, [data]);
+
+  const fetchAllForExport = useCallback(async (): Promise<Order[]> => {
+    try {
+      const response = await ordersService.fetchAll(
+        1,
+        1000,
+        filters.searchTerm,
+        filters.status,
+        filters.orderType,
+        filters.bookingType,
+        filters.scope,
+        filters.sortBy
+      );
+      return response.orders;
+    } catch {
+      toast.error('حدث خطأ في تصدير الطلبات');
+      return [];
+    }
+  }, [filters]);
+
   const updateOrderStatus = useCallback(
     async (id: string, status: string) => {
-      setLoadingId(id);
+      const previous = data;
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              orders: prev.orders.map((o) =>
+                o.id === id ? { ...o, status: status as Order['status'] } : o
+              ),
+            }
+          : prev
+      );
       try {
         await ordersService.updateStatus(id, status);
         toast.success('تم تحديث حالة الطلب');
-        fetchOrders();
       } catch {
+        setData(previous);
         toast.error('فشل تحديث حالة الطلب');
-      } finally {
-        setLoadingId(null);
       }
     },
-    [fetchOrders]
+    [data]
   );
 
   const handleSelectAll = useCallback(
@@ -124,7 +153,6 @@ export function useOrders() {
 
   return {
     orders: data?.orders || [],
-    allOrders,
     isLoading,
     selectedRows,
     currentPage,
@@ -138,7 +166,9 @@ export function useOrders() {
     updateFilter,
     setCurrentPage,
     refetch: fetchOrders,
+    fetchAllForExport,
     updateOrderStatus,
+    deleteOrder,
     loadingId,
   };
 }

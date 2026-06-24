@@ -82,7 +82,7 @@ export function StatCard({ title, value, percentage, icon, data, isLoading }: St
                                         return (
                                             <div className="bg-white shadow-lg border border-border rounded-lg p-2 px-3">
                                                 <p className="text-small-normal text-paragraph">
-                                                    {payload[0].value?.toLocaleString()}
+                                                    {payload[0].value?.toLocaleString('en-US')}
                                                 </p>
                                             </div>
                                         )

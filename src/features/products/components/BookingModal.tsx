@@ -6,15 +6,15 @@ import { BookingStepper } from "./BookingStepper";
 import { BookingNavigation } from "./BookingNavigation";
 import { UserDataForm } from "./UserDataForm";
 import { OrderSummary } from "./OrderSummary";
-import { BookingSuccess } from "./BookingSuccess";
 import { toast } from "sonner";
 import { useSession } from "@/features/auth/hooks/useAuth";
 import { BookingModalData, PhoneObject } from "../types/product.types";
 import { useCreateOrder } from "../hooks/useCreateOrder";
 import { BOOKING_STEPS } from "../constants";
+import { purchase } from "@/lib/pixel";
 
 export const BookingModal = () => {
-  const { isOpen, close, data } = useModalStore();
+  const { isOpen, close, data, open } = useModalStore();
   const modalData = data as BookingModalData | null;
   const { data: session } = useSession();
   const { createOrder, isSubmitting, error } = useCreateOrder();
@@ -60,13 +60,20 @@ export const BookingModal = () => {
       beneficiaryName: name,
       phone: phoneString,
       quantity: safeQuantity,
+      price: modalData.price,
     };
 
     const result = await createOrder(payload);
 
     if (result) {
-      toast.success("تم إتمام الحجز بنجاح");
-      setCurrentStep(3);
+      purchase({
+        content_name: modalData.productName,
+        content_ids: [modalData.productId],
+        value: modalData.price * safeQuantity,
+        num_items: safeQuantity,
+      });
+      close();
+      open("BOOKING_SUCCESS");
     } else {
       toast.error(error || "فشل في إنشاء الطلب");
     }
@@ -92,9 +99,7 @@ export const BookingModal = () => {
     }
 
     const lastStep = 2;
-    if (currentStep < lastStep) {
-      setCurrentStep((p) => p + 1);
-    }
+    if (currentStep < lastStep) setCurrentStep((p) => p + 1);
   };
 
   const handleBack = () => {
@@ -119,41 +124,33 @@ export const BookingModal = () => {
       );
     }
 
-    if (currentStep === 2) {
-      return (
-        <OrderSummary
-          data={modalData}
-          name={name}
-          quantity={quantity}
-          phone={phone}
-        />
-      );
-    }
-
-    return <BookingSuccess onClose={close} />;
+    return (
+      <OrderSummary
+        data={modalData}
+        name={name}
+        quantity={quantity}
+        phone={phone}
+      />
+    );
   };
 
   return (
     <div className="flex flex-col">
-      {currentStep !== 3 && (
-        <BookingStepper
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
-          steps={activeSteps}
-        />
-      )}
+      <BookingStepper
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
+        steps={activeSteps}
+      />
 
       {getCurrentStepContent()}
 
-      {currentStep !== 3 && (
-        <BookingNavigation
-          currentStep={currentStep}
-          handleBack={handleBack}
-          handleNext={handleNext}
-          isDisabledNext={isNextDisabled()}
-          isSubmitting={isSubmitting}
-        />
-      )}
+      <BookingNavigation
+        currentStep={currentStep}
+        handleBack={handleBack}
+        handleNext={handleNext}
+        isDisabledNext={isNextDisabled()}
+        isSubmitting={isSubmitting}
+      />
     </div>
   );
 };
