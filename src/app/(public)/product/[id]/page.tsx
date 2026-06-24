@@ -40,7 +40,8 @@ const getCachedProduct = unstable_cache(
 
 export default async function page({ params }: PageProps) {
   const { id } = await params;
-  const initialProduct = await getCachedProduct(id);
+  const decoded = decodeURIComponent(id);
+  const initialProduct = await getCachedProduct(decoded);
   if (!initialProduct) notFound();
-  return <ProductPage id={id} initialProduct={initialProduct} />;
+  return <ProductPage id={decoded} initialProduct={initialProduct} />;
 }
