@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
 import { Prisma } from "@/generated/prisma/client";
 import { revalidateTag } from "next/cache";
+import { generateSlug } from "@/lib/slug";
 
 export async function GET(
   _request: NextRequest,
@@ -76,10 +77,18 @@ export async function PUT(
       ? body.intents.filter((i: string) => validIntents.includes(i))
       : [];
 
+    const baseSlug = generateSlug(body.name.trim());
+    let slug = baseSlug;
+    let suffix = 1;
+    while (slug && await prisma.product.findFirst({ where: { slug, NOT: { id } } })) {
+      slug = `${baseSlug}-${suffix++}`;
+    }
+
     const product = await prisma.product.update({
       where: { id },
       data: {
         name: body.name.trim(),
+        slug: slug || null,
         description: body.description || "",
         price,
         location: body.location,

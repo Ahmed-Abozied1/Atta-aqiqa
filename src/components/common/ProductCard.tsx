@@ -12,6 +12,7 @@ export const ProductCard: FC<ProductCardProps> = ({
   price,
   rating = 0,
   imageUrl,
+  slug,
 }) => {
   return (
     <div className="flex flex-col h-full rounded-2xl overflow-hidden shadow-[0_4px_24px_0_rgba(0,0,0,0.08)]! bg-[#FDFDFD]">
@@ -56,7 +57,7 @@ export const ProductCard: FC<ProductCardProps> = ({
             appVariant="secondary"
             className="text-regular-medium! px-4! h-12!"
           >
-            <Link href={`/product/${id}`}>أحجز الآن</Link>
+            <Link href={`/product/${slug || id}`}>أحجز الآن</Link>
           </AppButton>
         </div>
       </div>

@@ -101,12 +101,13 @@ model Verification {
 model Product {
   id            String   @id @default(cuid())
   name          String
+  slug          String?  @unique
   description   String   @db.Text
   price         Float
   location      LocationType
   beneficiaries String
   imageUrl      String?
-  intents       IntentType[] // Change to array
+  intents       IntentType[]
   reviewsCount  Int      @default(0)
   orders        Order[]
   reviews       Review[]

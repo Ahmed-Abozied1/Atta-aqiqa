@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
+import { generateSlug } from "@/lib/slug";
 
 export async function GET(request: NextRequest) {
   try {
@@ -95,9 +96,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid price" }, { status: 400 });
     }
 
+    const baseSlug = generateSlug(body.name.trim());
+    let slug = baseSlug;
+    let suffix = 1;
+    while (slug && await prisma.product.findUnique({ where: { slug } })) {
+      slug = `${baseSlug}-${suffix++}`;
+    }
+
     const product = await prisma.product.create({
       data: {
         name: body.name.trim(),
+        slug: slug || null,
         description: body.description || "",
         price,
         location: body.location,

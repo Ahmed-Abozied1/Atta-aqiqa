@@ -30,6 +30,7 @@ export interface Stat {
 
 export interface Product {
   id: string
+  slug?: string | null
   name: string
   description?: string
   type?: string
@@ -47,6 +48,7 @@ export interface Product {
 
 export interface ProductCardProps {
   id: string;
+  slug?: string | null;
   name: string;
   beneficiaries?: number;
   price: number;

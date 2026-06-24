@@ -9,8 +9,8 @@ interface PageProps {
 
 const getCachedProduct = unstable_cache(
   async (id: string) => {
-    const raw = await prisma.product.findUnique({
-      where: { id },
+    const raw = await prisma.product.findFirst({
+      where: { OR: [{ slug: id }, { id }] },
       include: {
         reviews: {
           where: { isApproved: true },
