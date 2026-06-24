@@ -7,6 +7,7 @@ import { useDashboard } from "../hooks/useDashboard"
 import { useCardData } from "../hooks/useCardData"
 import ProductTypesCard from "./ProductTypesCard"
 import ServiceLevelCard from "./ServiceLevelCard"
+import { PushNotificationButton } from "@/components/common/PushNotificationButton"
 
 export default function AdminDashboard() {
   const { stats, isLoading } = useDashboard()
@@ -14,6 +15,9 @@ export default function AdminDashboard() {
 
   return (
     <div className="bg-card min-h-screen" dir="rtl">
+      <div className="flex justify-end px-4 pt-4">
+        <PushNotificationButton />
+      </div>
       <StatsOverview
         totalUsers={stats?.totalUsers}
         totalOrders={stats?.totalOrders}

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
 import { OrderStatus } from "@/generated/prisma/enums";
+import { sendPushToAdmins } from "@/lib/push";
 
 export async function GET(request: NextRequest) {
   try {
@@ -120,7 +121,6 @@ export async function POST(request: NextRequest) {
       beneficiaryName,
       phone,
       quantity = 1,
-      price,
     } = body;
 
     const validIntents = ["SADAKA", "AQEEQA", "NAZR", "ADHIYA", "KAFFARA", "BUY"];
@@ -157,6 +157,11 @@ export async function POST(request: NextRequest) {
         status: OrderStatus.PENDING,
       },
     });
+
+    sendPushToAdmins(
+      "طلب جديد",
+      `${beneficiaryName} — ${order.orderNumber}`
+    ).catch(() => {});
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {

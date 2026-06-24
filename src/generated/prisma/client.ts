@@ -70,6 +70,11 @@ export type Product = Prisma.ProductModel
  */
 export type Order = Prisma.OrderModel
 /**
+ * Model PushSubscription
+ * 
+ */
+export type PushSubscription = Prisma.PushSubscriptionModel
+/**
  * Model Review
  * 
  */

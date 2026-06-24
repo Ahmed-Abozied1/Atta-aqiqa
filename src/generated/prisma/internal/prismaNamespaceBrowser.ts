@@ -57,6 +57,7 @@ export const ModelName = {
   Verification: 'Verification',
   Product: 'Product',
   Order: 'Order',
+  PushSubscription: 'PushSubscription',
   Review: 'Review'
 } as const
 
@@ -171,6 +172,17 @@ export const OrderScalarFieldEnum = {
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+export const PushSubscriptionScalarFieldEnum = {
+  id: 'id',
+  endpoint: 'endpoint',
+  p256dh: 'p256dh',
+  auth: 'auth',
+  createdAt: 'createdAt'
+} as const
+
+export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
 
 
 export const ReviewScalarFieldEnum = {
