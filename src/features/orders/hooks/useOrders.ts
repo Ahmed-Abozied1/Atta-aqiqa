@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Order, OrdersFilters, PaginatedOrders } from '../types/orders.types';
 import { ordersService } from '../services/orders.service';
 import { toast } from 'sonner';
@@ -24,17 +24,16 @@ function useDebounce<T>(value: T, delay: number): T {
 
 export function useOrders() {
   const [data, setData] = useState<PaginatedOrders | null>(null);
-  const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<OrdersFilters>(initialFilters);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [loadingId] = useState<string | null>(null);
+  const latestOrderIdRef = useRef<string | null>(null);
   const debouncedSearch = useDebounce(filters.searchTerm, 500);
 
-  const fetchOrders = useCallback(async () => {
-    setIsLoading(true);
+  const fetchOrders = useCallback(async (silent = false) => {
+    if (!silent) setIsLoading(true);
     try {
       const response = await ordersService.fetchAll(
         currentPage,
@@ -46,11 +45,22 @@ export function useOrders() {
         filters.scope,
         filters.sortBy
       );
+
+      if (silent && response.orders.length > 0) {
+        const newLatestId = response.orders[0].id;
+        if (latestOrderIdRef.current && newLatestId !== latestOrderIdRef.current) {
+          toast.success('طلب جديد وصل!', { duration: 5000 });
+        }
+        latestOrderIdRef.current = newLatestId;
+      } else if (response.orders.length > 0) {
+        latestOrderIdRef.current = response.orders[0].id;
+      }
+
       setData(response);
     } catch {
-      toast.error('حدث خطأ في تحميل الطلبات');
+      if (!silent) toast.error('حدث خطأ في تحميل الطلبات');
     } finally {
-      setIsLoading(false);
+      if (!silent) setIsLoading(false);
     }
   }, [
     currentPage,
@@ -61,6 +71,16 @@ export function useOrders() {
     filters.scope,
     filters.sortBy,
   ]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  // Auto-refresh every 15 seconds silently
+  useEffect(() => {
+    const interval = setInterval(() => fetchOrders(true), 15000);
+    return () => clearInterval(interval);
+  }, [fetchOrders]);
 
   const deleteOrder = useCallback(async (id: string) => {
     const previous = data;
@@ -147,10 +167,6 @@ export function useOrders() {
     setCurrentPage(1);
   }, []);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
-
   return {
     orders: data?.orders || [],
     isLoading,
@@ -158,7 +174,7 @@ export function useOrders() {
     currentPage,
     totalPages: data?.totalPages || 1,
     filters,
-    selectedOrder,
+    selectedOrder: null,
     itemsPerPage: ITEMS_PER_PAGE,
     handleSelectAll,
     handleSelectRow,
