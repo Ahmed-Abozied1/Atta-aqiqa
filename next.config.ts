@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   experimental: {
     authInterrupts: true
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.ataa-aqiqa.com" }],
+        destination: "https://ataa-aqiqa.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

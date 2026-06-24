@@ -6,8 +6,10 @@ import { emailOTP } from "better-auth/plugins";
 
 export const auth = betterAuth({
   trustedOrigins: [
-  process.env.BETTER_AUTH_URL!,
-],
+    process.env.BETTER_AUTH_URL!,
+    "https://www.ataa-aqiqa.com",
+    "https://ataa-aqiqa.com",
+  ],
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
