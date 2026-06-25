@@ -3,16 +3,28 @@ import { TestimonialCardProps } from "../../types"
 import { getInitials } from "@/lib/getInitials";
 import { Star } from '@/components/ui/icons/Star';
 
+export const TestimonialCard = ({ rating, comment, name, image, user }: TestimonialCardProps) => {
+  const displayName = name || user?.name || "";
+  const displayImage = image || user?.image || null;
 
-export const TestimonialCard = ({ rating, comment, user }: TestimonialCardProps) => {
   return (
-    <div className="h-full min-h-full bg-bg rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-[0_4px_24px_0_rgba(0,0,0,0.08)]! flex flex-col gap-6">      <div className="flex items-center justify-between">
+    <div className="h-full min-h-full bg-bg rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-[0_4px_24px_0_rgba(0,0,0,0.08)]! flex flex-col gap-6">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
-          <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-secondary/80 flex items-center justify-center py-3.25 md:py-2.5 px-5 md:px-3.75 text-bg heading-5-semibold">
-            {getInitials(user?.name || "")}
-          </div>
+          {displayImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={displayImage}
+              alt={displayName}
+              className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover shrink-0"
+            />
+          ) : (
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-secondary/80 flex items-center justify-center text-bg heading-5-semibold shrink-0">
+              {getInitials(displayName)}
+            </div>
+          )}
           <div>
-            <h4 className="text-medium-bold md:text-large-bold text-title text-right mb-1 md:mb-2">{user?.name}</h4>
+            <h4 className="text-medium-bold md:text-large-bold text-gray-900 text-right mb-1 md:mb-2">{displayName}</h4>
             <div className="flex items-center gap-[4.83px] md:gap-1">
               {[...Array(5)].map((_, i) => (
                 <Star

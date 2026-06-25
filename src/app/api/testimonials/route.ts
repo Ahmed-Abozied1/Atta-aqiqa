@@ -9,8 +9,14 @@ export async function GET() {
         rating: { gte: 4 },
         isApproved: true,
       },
-      include: {
-        user: { select: { name: true } },
+      select: {
+        id: true,
+        rating: true,
+        comment: true,
+        createdAt: true,
+        guestName: true,
+        guestImage: true,
+        user: { select: { name: true, image: true } },
       },
       take: 10,
       orderBy: {
@@ -21,6 +27,7 @@ export async function GET() {
     const formattedTestimonials = testimonials.map(review => ({
       id: review.id,
       name: review.guestName || review.user?.name || "مجهول",
+      image: review.guestImage || review.user?.image || null,
       rating: review.rating,
       comment: review.comment,
       date: review.createdAt,

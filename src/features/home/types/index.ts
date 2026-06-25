@@ -12,14 +12,19 @@ export interface Testimonial {
   id: string;
   rating: number;
   comment: string;
+  name?: string | null;
+  image?: string | null;
   user?: TestimonialUser;
 }
 
 export interface TestimonialCardProps {
   rating: number
   comment: string
+  name?: string | null
+  image?: string | null
   user?: {
     name: string | null
+    image?: string | null
   }
 }
 
