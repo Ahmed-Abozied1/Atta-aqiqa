@@ -148,6 +148,7 @@ model Review {
   rating     Int
   comment    String?  @db.Text
   guestName  String?
+  guestImage String?
   userId     String?
   user       User?    @relation(fields: [userId], references: [id])
   productId  String

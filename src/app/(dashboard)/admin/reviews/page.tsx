@@ -6,7 +6,10 @@ import { SkeletonTable } from "@/components/common/SkeletonTable";
 import { AppButton } from "@/components/common/AppButton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, ChevronRight, ChevronLeft, CheckCircle, XCircle, Plus, Star as StarIcon } from "lucide-react";
+import { Search, ChevronRight, ChevronLeft, CheckCircle, XCircle, Plus, Star as StarIcon, Upload, X } from "lucide-react";
+import { UploadButton } from "@uploadthing/react";
+import type { OurFileRouter } from "@/app/api/uploadthing/core";
+import Image from "next/image";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -52,7 +55,7 @@ export default function AdminReviewsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
   const [products, setProducts] = useState<{ id: string; name: string }[]>([]);
-  const [form, setForm] = useState({ guestName: "", productId: "", rating: 5, comment: "" });
+  const [form, setForm] = useState({ guestName: "", guestImage: "", productId: "", rating: 5, comment: "" });
 
   useEffect(() => {
     fetch("/api/products?limit=100")
@@ -75,7 +78,7 @@ export default function AdminReviewsPage() {
       if (!res.ok) throw new Error();
       toast.success("تم إضافة التقييم");
       setShowAddModal(false);
-      setForm({ guestName: "", productId: "", rating: 5, comment: "" });
+      setForm({ guestName: "", guestImage: "", productId: "", rating: 5, comment: "" });
       window.location.reload();
     } catch {
       toast.error("فشل في إضافة التقييم");
@@ -195,6 +198,35 @@ export default function AdminReviewsPage() {
                 onChange={(e) => setForm((f) => ({ ...f, guestName: e.target.value }))}
               />
             </div>
+            <div>
+              <label className="text-sm font-medium text-title block mb-2">صورة العميل</label>
+              {form.guestImage ? (
+                <div className="relative w-16 h-16">
+                  <Image src={form.guestImage} alt="صورة العميل" fill className="rounded-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, guestImage: "" }))}
+                    className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ) : (
+                <UploadButton<OurFileRouter, "reviewImage">
+                  endpoint="reviewImage"
+                  onClientUploadComplete={(res) => {
+                    if (res?.[0]?.url) setForm((f) => ({ ...f, guestImage: res[0].url }));
+                  }}
+                  onUploadError={() => toast.error("فشل رفع الصورة")}
+                  appearance={{
+                    button: "bg-primary text-white text-sm px-4 py-2 rounded-lg",
+                    allowedContent: "hidden",
+                  }}
+                  content={{ button: <><Upload className="w-4 h-4 ml-1 inline" />رفع صورة</> }}
+                />
+              )}
+            </div>
+
             <div>
               <label className="text-sm font-medium text-title block mb-1">المنتج</label>
               <select

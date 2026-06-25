@@ -152,6 +152,7 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
                     <ReviewCard
                       key={review.id}
                       name={review.guestName || review.user?.name || "مجهول"}
+                      image={review.guestImage || review.user?.image || null}
                       comment={review.comment}
                       rating={review.rating}
                     />

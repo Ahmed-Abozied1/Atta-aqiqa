@@ -6,6 +6,7 @@ export interface Review {
   createdAt: string;
   updatedAt: string;
   guestName?: string | null;
+  guestImage?: string | null;
   userId?: string | null;
   productId: string;
   user?: {

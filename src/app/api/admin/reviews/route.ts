@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { guestName, productId, rating, comment } = await request.json();
+    const { guestName, guestImage, productId, rating, comment } = await request.json();
 
     if (!guestName?.trim() || !productId || !rating) {
       return NextResponse.json({ error: "بيانات ناقصة" }, { status: 400 });
@@ -102,6 +102,7 @@ export async function POST(request: NextRequest) {
     const review = await prisma.review.create({
       data: {
         guestName: guestName.trim(),
+        guestImage: guestImage || null,
         productId,
         rating,
         comment: comment?.trim() || null,
