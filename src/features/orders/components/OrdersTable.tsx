@@ -219,6 +219,24 @@ export function OrdersTable({
                   {formatOrderDate(order.createdAt)}
                 </span>
               </div>
+
+              <div className="flex gap-2 pt-1 pb-2">
+                <AppButton
+                  onClick={() => onEdit(order)}
+                  isLoading={loadingId === order.id}
+                  isDisabled={order.status === "RECEIVED" || loadingId === order.id}
+                  className="flex-1 bg-[#1D4734] hover:bg-[#153627] text-white text-sm"
+                >
+                  تم الاستلام
+                </AppButton>
+                <button
+                  onClick={() => setConfirmId(order.id)}
+                  disabled={loadingId === order.id}
+                  className="p-2 rounded-lg text-red-500 hover:bg-red-50 disabled:opacity-40 border border-red-200 transition-all"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
             </div>
           </div>
         ))}
