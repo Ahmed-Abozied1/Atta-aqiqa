@@ -6,9 +6,8 @@ import { SkeletonTable } from "@/components/common/SkeletonTable";
 import { AppButton } from "@/components/common/AppButton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Search, ChevronRight, ChevronLeft, CheckCircle, XCircle, Plus, Star as StarIcon, Upload, X } from "lucide-react";
-import { UploadButton } from "@uploadthing/react";
-import type { OurFileRouter } from "@/app/api/uploadthing/core";
+import { Search, ChevronRight, ChevronLeft, CheckCircle, XCircle, Plus, Star as StarIcon, X } from "lucide-react";
+import { UploadDropzone } from "@/lib/uploadthing";
 import Image from "next/image";
 import { toast } from "sonner";
 import {
@@ -213,18 +212,21 @@ export default function AdminReviewsPage() {
                   </button>
                 </div>
               ) : (
-                <UploadButton<OurFileRouter, "reviewImage">
-                  endpoint="reviewImage"
-                  onClientUploadComplete={(res) => {
-                    if (res?.[0]?.url) setForm((f) => ({ ...f, guestImage: res[0].url }));
-                  }}
-                  onUploadError={() => { toast.error("فشل رفع الصورة"); }}
-                  appearance={{
-                    button: "bg-primary text-white text-sm px-4 py-2 rounded-lg",
-                    allowedContent: "hidden",
-                  }}
-                  content={{ button: <><Upload className="w-4 h-4 ml-1 inline" />رفع صورة</> }}
-                />
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-3">
+                  <UploadDropzone
+                    endpoint="reviewImage"
+                    onClientUploadComplete={(res) => {
+                      if (res?.[0]?.url) setForm((f) => ({ ...f, guestImage: res[0].url }));
+                    }}
+                    onUploadError={() => { toast.error("فشل رفع الصورة"); }}
+                    appearance={{
+                      container: "border-0 p-0",
+                      button: "bg-primary text-white rounded-lg px-4 py-2 text-sm",
+                      label: "text-gray-500 text-sm",
+                      allowedContent: "text-gray-400 text-xs",
+                    }}
+                  />
+                </div>
               )}
             </div>
 
