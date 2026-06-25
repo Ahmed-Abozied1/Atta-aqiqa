@@ -20,7 +20,7 @@ export const homeService = {
   },
 
   async fetchTestimonials(): Promise<Testimonial[]> {
-    const response = await getData<Testimonial[]>('reviews')
+    const response = await getData<Testimonial[]>('testimonials')
     return response || []
   },
 }
