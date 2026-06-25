@@ -5,13 +5,14 @@ export interface Review {
   isApproved: boolean;
   createdAt: string;
   updatedAt: string;
-  userId: string;
+  guestName?: string | null;
+  userId?: string | null;
   productId: string;
-  user: {
+  user?: {
     name: string;
     image: string | null;
     email: string;
-  };
+  } | null;
   product: {
     name: string;
     price: number;

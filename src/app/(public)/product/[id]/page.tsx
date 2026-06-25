@@ -14,7 +14,7 @@ const getCachedProduct = unstable_cache(
       include: {
         reviews: {
           where: { isApproved: true },
-          include: { user: { select: { name: true, image: true } } },
+          select: { id: true, rating: true, comment: true, guestName: true, createdAt: true, user: { select: { name: true, image: true } } },
           orderBy: { createdAt: "desc" },
           take: 50,
         },

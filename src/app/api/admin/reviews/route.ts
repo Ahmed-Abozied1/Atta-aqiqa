@@ -83,6 +83,44 @@ export async function GET(request: NextRequest) {
   }
 }
 
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerSession();
+    if (!session?.user || session.user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { guestName, productId, rating, comment } = await request.json();
+
+    if (!guestName?.trim() || !productId || !rating) {
+      return NextResponse.json({ error: "بيانات ناقصة" }, { status: 400 });
+    }
+    if (rating < 1 || rating > 5) {
+      return NextResponse.json({ error: "تقييم غير صحيح" }, { status: 400 });
+    }
+
+    const review = await prisma.review.create({
+      data: {
+        guestName: guestName.trim(),
+        productId,
+        rating,
+        comment: comment?.trim() || null,
+        isApproved: true,
+      },
+    });
+
+    await prisma.product.update({
+      where: { id: productId },
+      data: { reviewsCount: { increment: 1 } },
+    });
+
+    return NextResponse.json(review, { status: 201 });
+  } catch (error) {
+    console.error("Error creating review:", error);
+    return NextResponse.json({ error: "Failed to create review" }, { status: 500 });
+  }
+}
+
 export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession();

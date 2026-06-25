@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAdminReviews } from "@/features/admin-reviews/hooks/useAdminReviews";
 import { SkeletonTable } from "@/components/common/SkeletonTable";
 import { AppButton } from "@/components/common/AppButton";
 import { Input } from "@/components/ui/input";
-import { Search, ChevronRight, ChevronLeft, CheckCircle, XCircle } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Search, ChevronRight, ChevronLeft, CheckCircle, XCircle, Plus, Star as StarIcon } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -41,6 +48,41 @@ export default function AdminReviewsPage() {
   const [approvingId, setApprovingId] = useState<string | null>(null);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
+  const [products, setProducts] = useState<{ id: string; name: string }[]>([]);
+  const [form, setForm] = useState({ guestName: "", productId: "", rating: 5, comment: "" });
+
+  useEffect(() => {
+    fetch("/api/products?limit=100")
+      .then((r) => r.json())
+      .then((d) => setProducts(d.data || []));
+  }, []);
+
+  const handleAddReview = async () => {
+    if (!form.guestName.trim() || !form.productId) {
+      toast.error("الاسم والمنتج مطلوبان");
+      return;
+    }
+    setAddLoading(true);
+    try {
+      const res = await fetch("/api/admin/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error();
+      toast.success("تم إضافة التقييم");
+      setShowAddModal(false);
+      setForm({ guestName: "", productId: "", rating: 5, comment: "" });
+      window.location.reload();
+    } catch {
+      toast.error("فشل في إضافة التقييم");
+    } finally {
+      setAddLoading(false);
+    }
+  };
 
   const onApprove = async (id: string) => {
     setApprovingId(id);
@@ -131,9 +173,66 @@ export default function AdminReviewsPage() {
 
   return (
     <div className="bg-card min-h-screen" dir="rtl">
-      <h2 className="heading-5-bold md:heading-4-bold text-title mb-6 md:mb-8">
-        إدارة التقييمات
-      </h2>
+      <div className="flex items-center justify-between mb-6 md:mb-8">
+        <h2 className="heading-5-bold md:heading-4-bold text-title">إدارة التقييمات</h2>
+        <AppButton onClick={() => setShowAddModal(true)} className="gap-2">
+          <Plus className="w-4 h-4" />
+          إضافة تقييم
+        </AppButton>
+      </div>
+
+      <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
+        <DialogContent dir="rtl" className="max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>إضافة تقييم من فيسبوك</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div>
+              <label className="text-sm font-medium text-title block mb-1">اسم العميل</label>
+              <Input
+                placeholder="اسم العميل على فيسبوك"
+                value={form.guestName}
+                onChange={(e) => setForm((f) => ({ ...f, guestName: e.target.value }))}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-title block mb-1">المنتج</label>
+              <select
+                value={form.productId}
+                onChange={(e) => setForm((f) => ({ ...f, productId: e.target.value }))}
+                className="w-full px-3 py-2 border border-border rounded-lg bg-bg text-paragraph"
+              >
+                <option value="">اختر المنتج</option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-title block mb-2">التقييم</label>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button key={star} type="button" onClick={() => setForm((f) => ({ ...f, rating: star }))}>
+                    <StarIcon className={`w-8 h-8 ${star <= form.rating ? "fill-rating text-rating" : "text-gray-300"}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-title block mb-1">التعليق</label>
+              <Textarea
+                placeholder="اكتب التعليق هنا..."
+                value={form.comment}
+                onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))}
+                rows={3}
+              />
+            </div>
+            <AppButton onClick={handleAddReview} isLoading={addLoading} className="w-full">
+              إضافة التقييم
+            </AppButton>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <div className="bg-bg rounded-2xl border border-card p-4 md:p-6">
         <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -218,7 +317,7 @@ export default function AdminReviewsPage() {
                 >
                   <TableCell>{index + 1 + (currentPage - 1) * 10}</TableCell>
                   <TableCell className="font-medium">
-                    {review.user?.name || "مستخدم محذوف"}
+                    {review.guestName || review.user?.name || "مستخدم محذوف"}
                   </TableCell>
                   <TableCell>{review.product?.name}</TableCell>
                   <TableCell>{renderStars(review.rating)}</TableCell>
@@ -279,7 +378,7 @@ export default function AdminReviewsPage() {
                       {index + 1 + (currentPage - 1) * 10}
                     </span>
                     <span className="font-semibold">
-                      {review.user?.name || "مستخدم محذوف"}
+                      {review.guestName || review.user?.name || "مستخدم محذوف"}
                     </span>
                   </div>
                   {getStatusBadge(review.isApproved)}

@@ -151,7 +151,7 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
                   reviews.map((review) => (
                     <ReviewCard
                       key={review.id}
-                      name={review.user.name}
+                      name={review.guestName || review.user?.name || "مجهول"}
                       comment={review.comment}
                       rating={review.rating}
                     />
