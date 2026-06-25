@@ -96,26 +96,25 @@ export function useOrders() {
     fetchOrders();
   }, [fetchOrders]);
 
-  // Real-time updates via SSE
+  // Real-time: service worker pushes message when new order arrives
   useEffect(() => {
-    let es: EventSource;
+    if (!("serviceWorker" in navigator)) return;
 
-    function connect() {
-      es = new EventSource("/api/orders/stream");
-      es.onmessage = (e) => {
-        const order = JSON.parse(e.data);
-        toast.success(`طلب جديد #${order.orderNumber} — ${order.beneficiaryName}`, { duration: 6000 });
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "NEW_ORDER") {
         playChime();
         fetchOrders(true);
-      };
-      es.onerror = () => {
-        es.close();
-        setTimeout(connect, 5000);
-      };
-    }
+      }
+    };
 
-    connect();
-    return () => es?.close();
+    navigator.serviceWorker.addEventListener("message", handleMessage);
+    return () => navigator.serviceWorker.removeEventListener("message", handleMessage);
+  }, [fetchOrders]);
+
+  // Fallback polling every 30s if push not enabled
+  useEffect(() => {
+    const interval = setInterval(() => fetchOrders(true), 30000);
+    return () => clearInterval(interval);
   }, [fetchOrders]);
 
   const deleteOrder = useCallback(async (id: string) => {
