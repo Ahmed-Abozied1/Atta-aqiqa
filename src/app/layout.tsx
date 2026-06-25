@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
@@ -35,9 +36,68 @@ const sstArabic = localFont({
   display: "swap",
 });
 
-export const metadata = {
-  title: "عطاء",
-  description: "مؤسسة عطاء للأضاحي",
+export const metadata: Metadata = {
+  metadataBase: new URL("https://www.ataa-aqiqa.com"),
+  title: {
+    default: "عطاء | أضاحي وعقيقة موثوقة في أفريقيا ومصر",
+    template: "%s | عطاء",
+  },
+  description:
+    "مزرعة عطاء تنفذ ذبائح الأضحية والعقيقة والصدقة بأسعار مناسبة داخل مصر وفي أفريقيا للمسلمين. ذبائح موثوقة وتوزيع على الفقراء مع توثيق كامل.",
+  keywords: [
+    "أضحية",
+    "عقيقة",
+    "ذبيحة",
+    "أضاحي أفريقيا",
+    "عقيقة مصر",
+    "أضحية رخيصة",
+    "ذبح العقيقة",
+    "صدقة جارية",
+    "مزرعة عطاء",
+    "أضاحي موثوقة",
+    "توزيع لحوم",
+    "Ataa",
+  ],
+  authors: [{ name: "مزرعة عطاء" }],
+  creator: "مزرعة عطاء",
+  publisher: "مزرعة عطاء",
+  alternates: {
+    canonical: "https://www.ataa-aqiqa.com",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ar_EG",
+    url: "https://www.ataa-aqiqa.com",
+    siteName: "عطاء",
+    title: "عطاء | أضاحي وعقيقة موثوقة في أفريقيا ومصر",
+    description:
+      "مزرعة عطاء تنفذ ذبائح الأضحية والعقيقة والصدقة بأسعار مناسبة داخل مصر وفي أفريقيا للمسلمين.",
+    images: [
+      {
+        url: "/images/hero-bg.webp",
+        width: 1200,
+        height: 630,
+        alt: "مزرعة عطاء - أضاحي وعقيقة موثوقة",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "عطاء | أضاحي وعقيقة موثوقة في أفريقيا ومصر",
+    description:
+      "مزرعة عطاء تنفذ ذبائح الأضحية والعقيقة والصدقة بأسعار مناسبة داخل مصر وفي أفريقيا للمسلمين.",
+    images: ["/images/hero-bg.webp"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
