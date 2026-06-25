@@ -44,7 +44,7 @@ export default function ProductPage({ id, initialProduct }: ProductPageProps) {
   return (
     <main className="min-h-screen relative overflow-hidden">
       <ProductOverview product={product} />
-      <ProductTabs productId={id} />
+      <ProductTabs productId={product.id} />
       <RelatedProducts products={products} loading={relatedLoading} error={relatedError} />
     </main>
   );
