@@ -96,10 +96,26 @@ export function useOrders() {
     fetchOrders();
   }, [fetchOrders]);
 
-  // Auto-refresh every 15 seconds silently
+  // Real-time updates via SSE
   useEffect(() => {
-    const interval = setInterval(() => fetchOrders(true), 15000);
-    return () => clearInterval(interval);
+    let es: EventSource;
+
+    function connect() {
+      es = new EventSource("/api/orders/stream");
+      es.onmessage = (e) => {
+        const order = JSON.parse(e.data);
+        toast.success(`طلب جديد #${order.orderNumber} — ${order.beneficiaryName}`, { duration: 6000 });
+        playChime();
+        fetchOrders(true);
+      };
+      es.onerror = () => {
+        es.close();
+        setTimeout(connect, 5000);
+      };
+    }
+
+    connect();
+    return () => es?.close();
   }, [fetchOrders]);
 
   const deleteOrder = useCallback(async (id: string) => {
