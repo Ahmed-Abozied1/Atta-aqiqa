@@ -97,10 +97,9 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const headers: Record<string, string> = !isAdmin
-      ? { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" }
-      : {};
-    return NextResponse.json(reviews, { headers });
+    return NextResponse.json(reviews, {
+      headers: { "Cache-Control": "no-store" },
+    });
   } catch (error) {
     console.error("Error fetching reviews:", error);
     return NextResponse.json({ error: "Failed to fetch reviews" }, { status: 500 });
