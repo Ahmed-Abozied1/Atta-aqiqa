@@ -185,21 +185,22 @@ export default function AdminReviewsPage() {
       </div>
 
       <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
-        <DialogContent dir="rtl" className="max-w-md rounded-2xl">
-          <DialogHeader>
-            <DialogTitle>إضافة تقييم من فيسبوك</DialogTitle>
+        <DialogContent dir="rtl" className="max-w-md rounded-2xl bg-white text-black overflow-y-auto max-h-[90vh]">
+          <DialogHeader className="border-b pb-4">
+            <DialogTitle className="text-xl font-bold text-gray-800 text-right">إضافة تقييم من فيسبوك</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 pt-2">
+          <div className="space-y-5 pt-2">
             <div>
-              <label className="text-sm font-medium text-title block mb-1">اسم العميل</label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1.5">اسم العميل</label>
               <Input
                 placeholder="اسم العميل على فيسبوك"
                 value={form.guestName}
                 onChange={(e) => setForm((f) => ({ ...f, guestName: e.target.value }))}
+                className="bg-gray-50 border-gray-300 text-gray-900"
               />
             </div>
             <div>
-              <label className="text-sm font-medium text-title block mb-2">صورة العميل</label>
+              <label className="text-sm font-semibold text-gray-700 block mb-2">صورة العميل</label>
               {form.guestImage ? (
                 <div className="relative w-16 h-16">
                   <Image src={form.guestImage} alt="صورة العميل" fill className="rounded-full object-cover" />
@@ -228,11 +229,11 @@ export default function AdminReviewsPage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-title block mb-1">المنتج</label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1.5">المنتج</label>
               <select
                 value={form.productId}
                 onChange={(e) => setForm((f) => ({ ...f, productId: e.target.value }))}
-                className="w-full px-3 py-2 border border-border rounded-lg bg-bg text-paragraph"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="">اختر المنتج</option>
                 {products.map((p) => (
@@ -241,7 +242,7 @@ export default function AdminReviewsPage() {
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium text-title block mb-2">التقييم</label>
+              <label className="text-sm font-semibold text-gray-700 block mb-2">التقييم</label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button key={star} type="button" onClick={() => setForm((f) => ({ ...f, rating: star }))}>
@@ -251,12 +252,13 @@ export default function AdminReviewsPage() {
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-title block mb-1">التعليق</label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1.5">التعليق</label>
               <Textarea
                 placeholder="اكتب التعليق هنا..."
                 value={form.comment}
                 onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))}
                 rows={3}
+                className="bg-gray-50 border-gray-300 text-gray-900"
               />
             </div>
             <AppButton onClick={handleAddReview} isLoading={addLoading} className="w-full">
