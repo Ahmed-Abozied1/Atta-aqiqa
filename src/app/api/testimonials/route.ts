@@ -20,7 +20,7 @@ export async function GET() {
 
     const formattedTestimonials = testimonials.map(review => ({
       id: review.id,
-      name: review.user.name,
+      name: review.guestName || review.user?.name || "مجهول",
       rating: review.rating,
       comment: review.comment,
       date: review.createdAt,

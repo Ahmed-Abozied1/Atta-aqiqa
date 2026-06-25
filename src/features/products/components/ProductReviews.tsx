@@ -14,10 +14,12 @@ interface Review {
   rating: number;
   comment: string;
   createdAt: string;
-  user: {
+  guestName?: string | null;
+  guestImage?: string | null;
+  user?: {
     name: string;
     image: string | null;
-  };
+  } | null;
 }
 
 interface ProductReviewsProps {

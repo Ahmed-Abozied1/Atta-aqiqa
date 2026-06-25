@@ -217,7 +217,7 @@ export default function AdminReviewsPage() {
                   onClientUploadComplete={(res) => {
                     if (res?.[0]?.url) setForm((f) => ({ ...f, guestImage: res[0].url }));
                   }}
-                  onUploadError={() => toast.error("فشل رفع الصورة")}
+                  onUploadError={() => { toast.error("فشل رفع الصورة"); }}
                   appearance={{
                     button: "bg-primary text-white text-sm px-4 py-2 rounded-lg",
                     allowedContent: "hidden",

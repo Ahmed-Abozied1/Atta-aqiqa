@@ -25,13 +25,15 @@ export interface Review {
   rating: number;
   comment: string;
   createdAt: string;
-  userId: string;
+  guestName?: string | null;
+  guestImage?: string | null;
+  userId?: string | null;
   productId: string;
-  user: {
+  user?: {
     name: string;
-    email: string;
+    email?: string;
     image: string | null;
-  };
+  } | null;
 }
 
 export interface CreateOrderPayload {
