@@ -22,6 +22,25 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
+function playChime() {
+  try {
+    const ctx = new AudioContext();
+    const notes = [880, 1100];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.4, ctx.currentTime + i * 0.18);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.18 + 0.4);
+      osc.start(ctx.currentTime + i * 0.18);
+      osc.stop(ctx.currentTime + i * 0.18 + 0.4);
+    });
+  } catch {}
+}
+
 export function useOrders() {
   const [data, setData] = useState<PaginatedOrders | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +69,7 @@ export function useOrders() {
         const newLatestId = response.orders[0].id;
         if (latestOrderIdRef.current && newLatestId !== latestOrderIdRef.current) {
           toast.success('طلب جديد وصل!', { duration: 5000 });
+          playChime();
         }
         latestOrderIdRef.current = newLatestId;
       } else if (response.orders.length > 0) {
