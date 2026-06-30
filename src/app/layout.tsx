@@ -88,6 +88,13 @@ export const metadata: Metadata = {
       "مزرعة عطاء تنفذ ذبائح الأضحية والعقيقة والصدقة بأسعار مناسبة داخل مصر وفي أفريقيا للمسلمين.",
     images: ["/images/hero-bg.webp"],
   },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
   robots: {
     index: true,
     follow: true,
