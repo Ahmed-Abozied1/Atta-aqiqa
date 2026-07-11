@@ -25,8 +25,8 @@ export interface Order {
   productId: string;
   status: OrderStatus;
   totalPrice: number;
+  quantity: number;
   intent: OrderIntent;
-  shares: number;
   beneficiaryName: string;
   phone: string;
   address: string | null;

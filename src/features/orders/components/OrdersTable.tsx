@@ -65,6 +65,9 @@ export function OrdersTable({
                 نوع الذبيحة
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
+                العدد
+              </TableHead>
+              <TableHead className="py-4.75 text-title text-center font-bold">
                 نوع الحجز
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
@@ -102,6 +105,7 @@ export function OrdersTable({
                     : "أفريقيا"}
                 </TableCell>
                 <TableCell>{order.product?.name}</TableCell>
+                <TableCell>{order.quantity ?? 1}</TableCell>
                 <TableCell>{getIntentLabel(order.intent)}</TableCell>
                 <TableCell>
                   <span
@@ -199,6 +203,16 @@ export function OrdersTable({
                 <span className="text-small-normal text-paragraph ltr" dir="ltr">
                   {order.phone}
                 </span>
+              </div>
+
+              <div className="flex gap-2 items-center flex-wrap">
+                <span className="text-small-bold text-title">نوع الذبيحة</span>
+                <span className="text-small-normal text-paragraph">{order.product?.name}</span>
+              </div>
+
+              <div className="flex gap-2 items-center flex-wrap">
+                <span className="text-small-bold text-title">عدد الذبائح</span>
+                <span className="text-small-normal text-paragraph">{order.quantity ?? 1}</span>
               </div>
 
               <div className="flex gap-2 items-center flex-wrap">
