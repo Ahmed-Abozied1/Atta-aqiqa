@@ -5,6 +5,14 @@ import { sendEmail } from "./email";
 import { emailOTP } from "better-auth/plugins";
 
 export const auth = betterAuth({
+  session: {
+    expiresIn: 60 * 60 * 24 * 30,   // 30 يوم
+    updateAge: 60 * 60 * 24,         // يجدد الـ session كل يوم تلقائي
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 60 * 24 * 30,
+    },
+  },
   trustedOrigins: [
     process.env.BETTER_AUTH_URL!,
     "https://www.ataa-aqiqa.com",
