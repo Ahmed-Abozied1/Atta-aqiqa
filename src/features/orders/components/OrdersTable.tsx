@@ -92,7 +92,9 @@ export function OrdersTable({
                 className="border-b border-border h-16! text-paragraph! text-medium-normal text-center"
               >
                 <TableCell className="pr-6!">
-                  <span className="text-regular-normal text-title">
+                  <span className={`text-regular-bold w-8 h-8 rounded-full flex items-center justify-center mx-auto text-white text-sm ${
+                    order.status === "RECEIVED" ? "bg-green-500" : "bg-red-500"
+                  }`}>
                     {index + 1 + (currentPage - 1) * itemsPerPage}
                   </span>
                 </TableCell>
@@ -187,7 +189,9 @@ export function OrdersTable({
         {orders.map((order, index) => (
           <div key={order.id} className="border-b border-border px-2">
             <div className="flex items-center py-2 h-14">
-              <span className="text-title w-8 block text-center">
+              <span className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0 ${
+                order.status === "RECEIVED" ? "bg-green-500" : "bg-red-500"
+              }`}>
                 {index + 1 + (currentPage - 1) * itemsPerPage}
               </span>
               <span className="text-title mr-2">
