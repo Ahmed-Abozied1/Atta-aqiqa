@@ -10,9 +10,10 @@ export const ordersService = {
     orderType = 'all',
     bookingType = 'all',
     scope = 'all',
-    sortBy = 'newest'
+    sortBy = 'oldest',
+    archived = false
   ): Promise<PaginatedOrders> {
-    const query = `orders?page=${page}&limit=${limit}&searchTerm=${searchTerm}&status=${status}&orderType=${orderType}&bookingType=${bookingType}&scope=${scope}&sortBy=${sortBy}`
+    const query = `orders?page=${page}&limit=${limit}&searchTerm=${searchTerm}&status=${status}&orderType=${orderType}&bookingType=${bookingType}&scope=${scope}&sortBy=${sortBy}&archived=${archived}`
     return await getData<PaginatedOrders>(query)
   },
 
@@ -28,10 +29,17 @@ export const ordersService = {
     return await response.json()
   },
 
+  async archiveOrder(id: string): Promise<void> {
+    const response = await fetch(`/api/orders/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isArchived: true }),
+    })
+    if (!response.ok) throw new Error('Failed to archive order')
+  },
+
   async deleteOrder(id: string): Promise<void> {
     const response = await fetch(`/api/orders/${id}`, { method: 'DELETE' })
-    if (!response.ok) {
-      throw new Error('Failed to delete order')
-    }
+    if (!response.ok) throw new Error('Failed to delete order')
   },
 }

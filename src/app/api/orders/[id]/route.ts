@@ -36,18 +36,27 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { id } = await params 
+    const { id } = await params
     const body = await request.json()
-    const { status } = body
+    const { status, isArchived } = body
 
-    const validStatuses = ["PENDING", "RECEIVED", "EXECUTING", "COMPLETED"];
-    if (!status || !validStatuses.includes(status.toUpperCase())) {
-      return NextResponse.json({ error: "حالة غير صحيحة" }, { status: 400 })
+    const data: any = {};
+
+    if (isArchived !== undefined) {
+      data.isArchived = isArchived;
+    } else if (status) {
+      const validStatuses = ["PENDING", "RECEIVED", "EXECUTING", "COMPLETED"];
+      if (!validStatuses.includes(status.toUpperCase())) {
+        return NextResponse.json({ error: "حالة غير صحيحة" }, { status: 400 })
+      }
+      data.status = status.toUpperCase();
+    } else {
+      return NextResponse.json({ error: "لا يوجد بيانات للتحديث" }, { status: 400 })
     }
 
     const updatedOrder = await prisma.order.update({
       where: { id },
-      data: { status: status.toUpperCase() },
+      data,
     })
 
     return NextResponse.json(updatedOrder)

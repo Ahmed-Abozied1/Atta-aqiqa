@@ -25,7 +25,8 @@ export async function GET(request: NextRequest) {
     const scope = searchParams.get("scope") || "all";
     const sortBy = searchParams.get("sortBy") || "newest";
 
-    const where: any = {};
+    const archived = searchParams.get("archived") === "true";
+    const where: any = { isArchived: archived };
 
     if (status !== "all") {
       where.status = status;

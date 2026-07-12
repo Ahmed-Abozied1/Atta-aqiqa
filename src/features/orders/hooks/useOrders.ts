@@ -10,7 +10,7 @@ const initialFilters: OrdersFilters = {
   orderType: 'all',
   bookingType: 'all',
   scope: 'all',
-  sortBy: 'newest',
+  sortBy: 'oldest',
 };
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -41,7 +41,7 @@ function playChime() {
   } catch {}
 }
 
-export function useOrders() {
+export function useOrders(archived = false) {
   const [data, setData] = useState<PaginatedOrders | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
@@ -66,7 +66,8 @@ export function useOrders() {
         filters.orderType,
         filters.bookingType,
         filters.scope,
-        filters.sortBy
+        filters.sortBy,
+        archived
       );
 
       if (silent && response.orders.length > 0) {
@@ -127,6 +128,20 @@ export function useOrders() {
     return () => clearInterval(interval);
   }, [fetchOrders]);
 
+  const archiveOrder = useCallback(async (id: string) => {
+    const previous = data;
+    setData((prev) =>
+      prev ? { ...prev, orders: prev.orders.filter((o) => o.id !== id) } : prev
+    );
+    try {
+      await ordersService.archiveOrder(id);
+      toast.success('تم أرشفة الطلب');
+    } catch {
+      setData(previous);
+      toast.error('فشل أرشفة الطلب');
+    }
+  }, [data]);
+
   const deleteOrder = useCallback(async (id: string) => {
     const previous = data;
     setData((prev) =>
@@ -134,7 +149,7 @@ export function useOrders() {
     );
     try {
       await ordersService.deleteOrder(id);
-      toast.success('تم حذف الطلب بنجاح');
+      toast.success('تم حذف الطلب نهائياً');
     } catch {
       setData(previous);
       toast.error('فشل حذف الطلب');
@@ -229,6 +244,7 @@ export function useOrders() {
     refetch: fetchOrders,
     fetchAllForExport,
     updateOrderStatus,
+    archiveOrder,
     deleteOrder,
     loadingId,
   };

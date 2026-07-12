@@ -26,6 +26,7 @@ export interface Order {
   status: OrderStatus;
   totalPrice: number;
   quantity: number;
+  isArchived: boolean;
   intent: OrderIntent;
   beneficiaryName: string;
   phone: string;

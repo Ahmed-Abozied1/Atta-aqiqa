@@ -127,6 +127,7 @@ model Order {
   intent          IntentType
   beneficiaryName String
   phone           String
+  isArchived      Boolean     @default(false)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 

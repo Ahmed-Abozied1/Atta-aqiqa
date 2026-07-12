@@ -2,60 +2,52 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, ChevronLeft, Archive } from "lucide-react"
+import { ChevronRight, ChevronLeft, ArrowRight } from "lucide-react"
 import { useOrders } from "../hooks/useOrders"
 import { OrdersTable } from "./OrdersTable"
-import { OrdersFilters } from "./OrdersFilters"
 import { SkeletonTable } from "@/components/common/SkeletonTable"
-import { PushNotificationButton } from "@/components/common/PushNotificationButton"
 
-export default function OrdersManagement() {
+export default function ArchiveManagement() {
   const {
     orders,
     isLoading,
-    filters,
     currentPage,
     totalPages,
     itemsPerPage,
-    resetFilters,
-    updateFilter,
     setCurrentPage,
-    updateOrderStatus,
-    archiveOrder,
+    deleteOrder,
     loadingId,
-  } = useOrders()
+  } = useOrders(true)
 
   return (
     <div className="bg-card min-h-screen" dir="rtl">
       <div className="flex items-center justify-between mb-6 md:mb-8 flex-wrap gap-3">
-        <h2 className="heading-5-bold md:heading-4-bold text-title">إدارة الطلبات</h2>
-        <div className="flex items-center gap-3">
-          <Link href="/admin/archive">
-            <Button variant="outline" className="gap-2 border-amber-400 text-amber-700 hover:bg-amber-50">
-              <Archive size={16} />
-              <span>الأرشيف</span>
-            </Button>
-          </Link>
-          <PushNotificationButton />
-        </div>
+        <h2 className="heading-5-bold md:heading-4-bold text-title">أرشيف الطلبات</h2>
+        <Link href="/admin/orders">
+          <Button variant="outline" className="gap-2">
+            <ArrowRight size={16} />
+            <span>العودة للطلبات</span>
+          </Button>
+        </Link>
       </div>
 
       <div className="bg-bg rounded-2xl border border-card p-4 md:p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-4 md:mb-6">
-          <OrdersFilters filters={filters} onFilterChange={updateFilter} onReset={resetFilters} />
-        </div>
-
         {isLoading ? (
           <SkeletonTable columns={9} rows={10} />
+        ) : orders.length === 0 ? (
+          <div className="text-center py-16 text-paragraph">
+            <p className="text-lg font-medium">الأرشيف فارغ</p>
+            <p className="text-sm mt-2">لا توجد طلبات مؤرشفة حتى الآن</p>
+          </div>
         ) : (
           <OrdersTable
             orders={orders}
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
-            onEdit={(order) => updateOrderStatus(order.id, "RECEIVED")}
-            onDelete={archiveOrder}
+            onEdit={() => {}}
+            onDelete={deleteOrder}
             loadingId={loadingId}
-            isArchiveMode={false}
+            isArchiveMode={true}
           />
         )}
 
