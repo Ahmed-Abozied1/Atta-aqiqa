@@ -10,7 +10,7 @@ export const ordersService = {
     orderType = 'all',
     bookingType = 'all',
     scope = 'all',
-    sortBy = 'oldest',
+    sortBy = 'newest',
     archived = false
   ): Promise<PaginatedOrders> {
     const query = `orders?page=${page}&limit=${limit}&searchTerm=${searchTerm}&status=${status}&orderType=${orderType}&bookingType=${bookingType}&scope=${scope}&sortBy=${sortBy}&archived=${archived}`
