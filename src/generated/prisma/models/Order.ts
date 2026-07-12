@@ -49,6 +49,7 @@ export type OrderMinAggregateOutputType = {
   intent: $Enums.IntentType | null
   beneficiaryName: string | null
   phone: string | null
+  isArchived: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +65,7 @@ export type OrderMaxAggregateOutputType = {
   intent: $Enums.IntentType | null
   beneficiaryName: string | null
   phone: string | null
+  isArchived: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -79,6 +81,7 @@ export type OrderCountAggregateOutputType = {
   intent: number
   beneficiaryName: number
   phone: number
+  isArchived: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -108,6 +111,7 @@ export type OrderMinAggregateInputType = {
   intent?: true
   beneficiaryName?: true
   phone?: true
+  isArchived?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -123,6 +127,7 @@ export type OrderMaxAggregateInputType = {
   intent?: true
   beneficiaryName?: true
   phone?: true
+  isArchived?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -138,6 +143,7 @@ export type OrderCountAggregateInputType = {
   intent?: true
   beneficiaryName?: true
   phone?: true
+  isArchived?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -240,6 +246,7 @@ export type OrderGroupByOutputType = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived: boolean
   createdAt: Date
   updatedAt: Date
   _count: OrderCountAggregateOutputType | null
@@ -278,6 +285,7 @@ export type OrderWhereInput = {
   intent?: Prisma.EnumIntentTypeFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringFilter<"Order"> | string
   phone?: Prisma.StringFilter<"Order"> | string
+  isArchived?: Prisma.BoolFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -295,6 +303,7 @@ export type OrderOrderByWithRelationInput = {
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -315,6 +324,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   intent?: Prisma.EnumIntentTypeFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringFilter<"Order"> | string
   phone?: Prisma.StringFilter<"Order"> | string
+  isArchived?: Prisma.BoolFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -332,6 +342,7 @@ export type OrderOrderByWithAggregationInput = {
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
@@ -355,6 +366,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   intent?: Prisma.EnumIntentTypeWithAggregatesFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringWithAggregatesFilter<"Order"> | string
   phone?: Prisma.StringWithAggregatesFilter<"Order"> | string
+  isArchived?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
 }
@@ -368,6 +380,7 @@ export type OrderCreateInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
@@ -385,6 +398,7 @@ export type OrderUncheckedCreateInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -397,6 +411,7 @@ export type OrderUpdateInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
@@ -414,6 +429,7 @@ export type OrderUncheckedUpdateInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -429,6 +445,7 @@ export type OrderCreateManyInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -441,6 +458,7 @@ export type OrderUpdateManyMutationInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -456,6 +474,7 @@ export type OrderUncheckedUpdateManyInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -481,6 +500,7 @@ export type OrderCountOrderByAggregateInput = {
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -502,6 +522,7 @@ export type OrderMaxOrderByAggregateInput = {
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -517,6 +538,7 @@ export type OrderMinOrderByAggregateInput = {
   intent?: Prisma.SortOrder
   beneficiaryName?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -628,6 +650,7 @@ export type OrderCreateWithoutUserInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   product: Prisma.ProductCreateNestedOneWithoutOrdersInput
@@ -643,6 +666,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -687,6 +711,7 @@ export type OrderScalarWhereInput = {
   intent?: Prisma.EnumIntentTypeFilter<"Order"> | $Enums.IntentType
   beneficiaryName?: Prisma.StringFilter<"Order"> | string
   phone?: Prisma.StringFilter<"Order"> | string
+  isArchived?: Prisma.BoolFilter<"Order"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
 }
@@ -700,6 +725,7 @@ export type OrderCreateWithoutProductInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
@@ -715,6 +741,7 @@ export type OrderUncheckedCreateWithoutProductInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -755,6 +782,7 @@ export type OrderCreateManyUserInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -767,6 +795,7 @@ export type OrderUpdateWithoutUserInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneRequiredWithoutOrdersNestedInput
@@ -782,6 +811,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -796,6 +826,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -810,6 +841,7 @@ export type OrderCreateManyProductInput = {
   intent: $Enums.IntentType
   beneficiaryName: string
   phone: string
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -822,6 +854,7 @@ export type OrderUpdateWithoutProductInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
@@ -837,6 +870,7 @@ export type OrderUncheckedUpdateWithoutProductInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -851,6 +885,7 @@ export type OrderUncheckedUpdateManyWithoutProductInput = {
   intent?: Prisma.EnumIntentTypeFieldUpdateOperationsInput | $Enums.IntentType
   beneficiaryName?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -868,6 +903,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
@@ -885,6 +921,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
@@ -902,6 +939,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
@@ -919,11 +957,12 @@ export type OrderSelectScalar = {
   intent?: boolean
   beneficiaryName?: boolean
   phone?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "userId" | "productId" | "status" | "totalPrice" | "quantity" | "intent" | "beneficiaryName" | "phone" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderNumber" | "userId" | "productId" | "status" | "totalPrice" | "quantity" | "intent" | "beneficiaryName" | "phone" | "isArchived" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
   product?: boolean | Prisma.ProductDefaultArgs<ExtArgs>
@@ -954,6 +993,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     intent: $Enums.IntentType
     beneficiaryName: string
     phone: string
+    isArchived: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["order"]>
@@ -1391,6 +1431,7 @@ export interface OrderFieldRefs {
   readonly intent: Prisma.FieldRef<"Order", 'IntentType'>
   readonly beneficiaryName: Prisma.FieldRef<"Order", 'String'>
   readonly phone: Prisma.FieldRef<"Order", 'String'>
+  readonly isArchived: Prisma.FieldRef<"Order", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
 }

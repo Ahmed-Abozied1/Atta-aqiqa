@@ -1132,6 +1132,7 @@ export const OrderScalarFieldEnum = {
   intent: 'intent',
   beneficiaryName: 'beneficiaryName',
   phone: 'phone',
+  isArchived: 'isArchived',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
