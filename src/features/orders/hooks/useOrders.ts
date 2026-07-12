@@ -10,7 +10,7 @@ const initialFilters: OrdersFilters = {
   orderType: 'all',
   bookingType: 'all',
   scope: 'all',
-  sortBy: 'newest',
+  sortBy: 'oldest',
 };
 
 function useDebounce<T>(value: T, delay: number): T {

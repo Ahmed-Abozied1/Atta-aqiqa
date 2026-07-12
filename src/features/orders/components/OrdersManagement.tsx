@@ -6,6 +6,7 @@ import { useOrders } from "../hooks/useOrders"
 import { OrdersTable } from "./OrdersTable"
 import { OrdersFilters } from "./OrdersFilters"
 import { SkeletonTable } from "@/components/common/SkeletonTable"
+import { PushNotificationButton } from "@/components/common/PushNotificationButton"
 
 export default function OrdersManagement() {
   const {
@@ -28,7 +29,10 @@ export default function OrdersManagement() {
 
   return (
     <div className="bg-card min-h-screen" dir="rtl">
-      <h2 className="heading-5-bold md:heading-4-bold text-title mb-6 md:mb-8">إدارة الطلبات</h2>
+      <div className="flex items-center justify-between mb-6 md:mb-8">
+        <h2 className="heading-5-bold md:heading-4-bold text-title">إدارة الطلبات</h2>
+        <PushNotificationButton />
+      </div>
 
     <div className="bg-bg rounded-2xl border border-card p-4 md:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-4 md:mb-6">
