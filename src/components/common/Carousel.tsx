@@ -22,7 +22,7 @@ export function Carousel<T>({
   renderItem,
   renderSkeleton,
   slidesPerView = {
-    mobile: 1.5,
+    mobile: 1.2,
     tablet: 2.5,
     desktop: 3.5,
   },
