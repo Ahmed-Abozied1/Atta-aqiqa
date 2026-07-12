@@ -16,7 +16,7 @@ export const ProductCard: FC<ProductCardProps> = ({
 }) => {
   return (
     <div className="flex flex-col h-full rounded-2xl overflow-hidden shadow-[0_4px_24px_0_rgba(0,0,0,0.08)]! bg-[#FDFDFD]">
-      <div className="h-36 md:h-60">
+      <div className="h-48 md:h-60">
         <Image
           src={imageUrl || ""}
           alt={name}
