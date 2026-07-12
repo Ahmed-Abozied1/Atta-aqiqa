@@ -45,43 +45,23 @@ export function OrdersTable({
 
   return (
     <div className="w-full" dir="rtl">
-      <div className="overflow-x-auto w-full">
-        <Table className="min-w-max hidden md:table">
+      <div className="w-full">
+        <Table className="w-full hidden md:table table-fixed text-sm">
           <TableHeader className="bg-card">
             <TableRow className="border-none hover:bg-transparent">
-              <TableHead className="pr-6! py-4.75! text-right">
-                <span className="text-secondary heading-6-bold">#</span>
+              <TableHead className="w-10 py-3 text-center">
+                <span className="text-secondary font-bold">#</span>
               </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                اسم العميل
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                رقم الهاتف
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                مكان التنفيذ
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                نوع الذبيحة
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                العدد
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                نوع الحجز
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                الحالة
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                التاريخ
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold">
-                الإجراءات
-              </TableHead>
-              <TableHead className="py-4.75 text-title text-center font-bold w-16">
-                حذف
-              </TableHead>
+              <TableHead className="w-[14%] py-3 text-center font-bold text-title text-xs">اسم العميل</TableHead>
+              <TableHead className="w-[12%] py-3 text-center font-bold text-title text-xs">رقم الهاتف</TableHead>
+              <TableHead className="w-[8%] py-3 text-center font-bold text-title text-xs">المكان</TableHead>
+              <TableHead className="w-[12%] py-3 text-center font-bold text-title text-xs">نوع الذبيحة</TableHead>
+              <TableHead className="w-[6%] py-3 text-center font-bold text-title text-xs">العدد</TableHead>
+              <TableHead className="w-[8%] py-3 text-center font-bold text-title text-xs">نوع الحجز</TableHead>
+              <TableHead className="w-[10%] py-3 text-center font-bold text-title text-xs">الحالة</TableHead>
+              <TableHead className="w-[10%] py-3 text-center font-bold text-title text-xs">التاريخ</TableHead>
+              <TableHead className="w-[12%] py-3 text-center font-bold text-title text-xs">الإجراءات</TableHead>
+              <TableHead className="w-10 py-3 text-center font-bold text-title text-xs">حذف</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -89,57 +69,54 @@ export function OrdersTable({
             {orders.map((order, index) => (
               <TableRow
                 key={order.id}
-                className="border-b border-border h-16! text-paragraph! text-medium-normal text-center"
+                className="border-b border-border h-14! text-paragraph! text-center"
               >
-                <TableCell className="pr-6!">
-                  <span className={`text-regular-bold w-8 h-8 rounded-full flex items-center justify-center mx-auto text-white text-sm ${
+                <TableCell className="text-center px-1">
+                  <span className={`text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center mx-auto text-white ${
                     order.status === "RECEIVED" ? "bg-green-500" : "bg-red-500"
                   }`}>
                     {index + 1 + (currentPage - 1) * itemsPerPage}
                   </span>
                 </TableCell>
 
-                <TableCell>{order.beneficiaryName || "زائر"}</TableCell>
-                <TableCell className="ltr" dir="ltr">{order.phone}</TableCell>
-                <TableCell>
-                  {order.product?.location === "INSIDE_EGYPT"
-                    ? "داخل مصر"
-                    : "أفريقيا"}
+                <TableCell className="text-xs px-1 truncate max-w-0">
+                  <span className="block truncate">{order.beneficiaryName || "زائر"}</span>
                 </TableCell>
-                <TableCell>{order.product?.name}</TableCell>
-                <TableCell>{order.quantity ?? 1}</TableCell>
-                <TableCell>{getIntentLabel(order.intent)}</TableCell>
-                <TableCell>
-                  <span
-                    className={
-                      STATUS_COLORS[order.status] +
-                      " px-4 py-2 rounded-full text-xs font-bold min-h-10 flex items-center justify-center w-fit mx-auto"
-                    }
-                  >
+                <TableCell className="text-xs px-1" dir="ltr">{order.phone}</TableCell>
+                <TableCell className="text-xs px-1 text-center">
+                  {order.product?.location === "INSIDE_EGYPT" ? "مصر" : "أفريقيا"}
+                </TableCell>
+                <TableCell className="text-xs px-1 truncate max-w-0">
+                  <span className="block truncate">{order.product?.name}</span>
+                </TableCell>
+                <TableCell className="text-xs px-1 text-center">{order.quantity ?? 1}</TableCell>
+                <TableCell className="text-xs px-1 text-center">{getIntentLabel(order.intent)}</TableCell>
+                <TableCell className="px-1">
+                  <span className={cn(
+                    STATUS_COLORS[order.status],
+                    "px-2 py-1 rounded-full text-xs font-bold flex items-center justify-center w-fit mx-auto whitespace-nowrap"
+                  )}>
                     {STATUS_LABELS[order.status]}
                   </span>
                 </TableCell>
-                <TableCell>{formatOrderDate(order.createdAt)}</TableCell>
-                <TableCell>
+                <TableCell className="text-xs px-1 text-center whitespace-nowrap">{formatOrderDate(order.createdAt)}</TableCell>
+                <TableCell className="px-1">
                   <AppButton
                     onClick={() => onEdit(order)}
                     isLoading={loadingId === order.id}
-                    className="bg-[#1D4734] hover:bg-[#153627] text-white"
-                    isDisabled={
-                      order.status === "RECEIVED" ||
-                      loadingId === order.id
-                    }
+                    className="bg-[#1D4734] hover:bg-[#153627] text-white text-xs px-2 h-8 w-full"
+                    isDisabled={order.status === "RECEIVED" || loadingId === order.id}
                   >
                     تم الاستلام
                   </AppButton>
                 </TableCell>
-                <TableCell className="w-16 text-center">
+                <TableCell className="text-center px-1">
                   <button
                     onClick={() => setConfirmId(order.id)}
                     disabled={loadingId === order.id}
-                    className="p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 disabled:opacity-40 transition-all cursor-pointer mx-auto flex items-center justify-center"
+                    className="p-1.5 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-50 disabled:opacity-40 transition-all cursor-pointer mx-auto flex items-center justify-center"
                   >
-                    <Trash2 size={22} />
+                    <Trash2 size={18} />
                   </button>
                 </TableCell>
               </TableRow>
