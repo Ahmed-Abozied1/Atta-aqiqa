@@ -49,9 +49,13 @@ export function useOrders() {
   const [filters, setFilters] = useState<OrdersFilters>(initialFilters);
   const [loadingId] = useState<string | null>(null);
   const latestOrderIdRef = useRef<string | null>(null);
+  const isFetchingRef = useRef(false);
+  const hasPushRef = useRef(false);
   const debouncedSearch = useDebounce(filters.searchTerm, 500);
 
   const fetchOrders = useCallback(async (silent = false) => {
+    if (silent && isFetchingRef.current) return; // منع concurrent fetches
+    isFetchingRef.current = true;
     if (!silent) setIsLoading(true);
     try {
       const response = await ordersService.fetchAll(
@@ -81,6 +85,7 @@ export function useOrders() {
       if (!silent) toast.error('حدث خطأ في تحميل الطلبات');
     } finally {
       if (!silent) setIsLoading(false);
+      isFetchingRef.current = false;
     }
   }, [
     currentPage,
@@ -102,6 +107,7 @@ export function useOrders() {
 
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === "NEW_ORDER") {
+        hasPushRef.current = true;
         playChime();
         fetchOrders(true);
       }
@@ -111,9 +117,13 @@ export function useOrders() {
     return () => navigator.serviceWorker.removeEventListener("message", handleMessage);
   }, [fetchOrders]);
 
-  // Fallback polling every 30s if push not enabled
+  // Fallback polling كل 60 ثانية — فقط لو الـ push مش شغال
   useEffect(() => {
-    const interval = setInterval(() => fetchOrders(true), 30000);
+    const interval = setInterval(() => {
+      if (!hasPushRef.current) {
+        fetchOrders(true);
+      }
+    }, 60000);
     return () => clearInterval(interval);
   }, [fetchOrders]);
 

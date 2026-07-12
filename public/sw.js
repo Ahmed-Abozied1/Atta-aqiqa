@@ -1,22 +1,47 @@
 self.addEventListener("push", (event) => {
   const data = event.data?.json() ?? {};
+
   event.waitUntil(
-    Promise.all([
-      self.registration.showNotification(data.title || "إشعار جديد", {
+    self.registration
+      .showNotification(data.title || "إشعار جديد", {
         body: data.body || "",
-        icon: "/icon-192.png",
-        badge: "/icon-192.png",
+        icon: "/images/logo.svg",
         dir: "rtl",
         lang: "ar",
-      }),
-      self.clients.matchAll({ type: "window" }).then((clients) => {
-        clients.forEach((client) => client.postMessage({ type: "NEW_ORDER" }));
-      }),
-    ])
+      })
+      .then(() =>
+        self.clients
+          .matchAll({ type: "window", includeUncontrolled: true })
+          .then((clients) => {
+            clients.forEach((client) =>
+              client.postMessage({ type: "NEW_ORDER" })
+            );
+          })
+      )
+      .catch(() => {
+        // إذا فشل عرض الإشعار، أرسل الرسالة للـ clients على الأقل
+        return self.clients
+          .matchAll({ type: "window", includeUncontrolled: true })
+          .then((clients) => {
+            clients.forEach((client) =>
+              client.postMessage({ type: "NEW_ORDER" })
+            );
+          });
+      })
   );
 });
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  event.waitUntil(clients.openWindow("/admin/orders"));
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clients) => {
+        const adminClient = clients.find((c) =>
+          c.url.includes("/admin")
+        );
+        if (adminClient) return adminClient.focus();
+        return self.clients.openWindow("/admin/orders");
+      })
+  );
 });
