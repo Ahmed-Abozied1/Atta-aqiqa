@@ -55,7 +55,7 @@ export const ProductCard: FC<ProductCardProps> = ({
           <AppButton
             asChild
             appVariant="secondary"
-            className="text-xs! md:text-regular-medium! px-3! md:px-4! h-8! md:h-12!"
+            className="text-sm! md:text-regular-medium! px-4! md:px-4! h-10! md:h-12!"
           >
             <Link href={`/product/${slug || id}`}>أحجز الآن</Link>
           </AppButton>
