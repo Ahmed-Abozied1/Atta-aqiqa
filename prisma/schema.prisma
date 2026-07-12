@@ -144,6 +144,14 @@ model PushSubscription {
   createdAt DateTime @default(now())
 }
 
+model IpRateLimit {
+  ip      String   @id
+  count   Int      @default(1)
+  resetAt DateTime
+
+  @@map("ip_rate_limit")
+}
+
 model Review {
   id         String   @id @default(cuid())
   rating     Int

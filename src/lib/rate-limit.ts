@@ -1,14 +1,21 @@
-const ipMap = new Map<string, { count: number; resetAt: number }>();
+import prisma from "./prisma";
 
 const WINDOW_MS = 60_000 * 60 * 24 * 30; // 30 days
 const MAX_REQUESTS = 10;
 
-export function rateLimit(ip: string): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  const entry = ipMap.get(ip);
+export async function rateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
+  const now = new Date();
+  const resetAt = new Date(Date.now() + WINDOW_MS);
 
+  const entry = await prisma.ipRateLimit.findUnique({ where: { ip } });
+
+  // No entry or window expired → reset
   if (!entry || now > entry.resetAt) {
-    ipMap.set(ip, { count: 1, resetAt: now + WINDOW_MS });
+    await prisma.ipRateLimit.upsert({
+      where: { ip },
+      create: { ip, count: 1, resetAt },
+      update: { count: 1, resetAt },
+    });
     return { allowed: true, remaining: MAX_REQUESTS - 1 };
   }
 
@@ -16,6 +23,10 @@ export function rateLimit(ip: string): { allowed: boolean; remaining: number } {
     return { allowed: false, remaining: 0 };
   }
 
-  entry.count++;
-  return { allowed: true, remaining: MAX_REQUESTS - entry.count };
+  await prisma.ipRateLimit.update({
+    where: { ip },
+    data: { count: { increment: 1 } },
+  });
+
+  return { allowed: true, remaining: MAX_REQUESTS - (entry.count + 1) };
 }
