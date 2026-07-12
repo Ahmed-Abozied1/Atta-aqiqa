@@ -1,7 +1,7 @@
 const ipMap = new Map<string, { count: number; resetAt: number }>();
 
-const WINDOW_MS = 60_000; // 1 minute
-const MAX_REQUESTS = 5;
+const WINDOW_MS = 60_000 * 60 * 24 * 30; // 30 days
+const MAX_REQUESTS = 10;
 
 export function rateLimit(ip: string): { allowed: boolean; remaining: number } {
   const now = Date.now();
