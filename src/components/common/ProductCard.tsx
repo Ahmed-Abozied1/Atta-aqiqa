@@ -16,7 +16,7 @@ export const ProductCard: FC<ProductCardProps> = ({
 }) => {
   return (
     <div className="flex flex-col h-full rounded-2xl overflow-hidden shadow-[0_4px_24px_0_rgba(0,0,0,0.08)]! bg-[#FDFDFD]">
-      <div className="h-60">
+      <div className="h-36 md:h-60">
         <Image
           src={imageUrl || ""}
           alt={name}
@@ -26,13 +26,13 @@ export const ProductCard: FC<ProductCardProps> = ({
         />
       </div>
 
-      <div className="px-4">
-        <span className="bg-[#E9F7EF] text-success h-8 text-small-bold px-4 py-2 rounded-full w-fit flex items-center">
+      <div className="px-3 md:px-4">
+        <span className="bg-[#E9F7EF] text-success h-6 md:h-8 text-xs md:text-small-bold px-3 md:px-4 py-1 md:py-2 rounded-full w-fit flex items-center mt-2">
           {beneficiaries}
         </span>
 
-        <div className="flex justify-between gap-4 items-center mt-2 md:mt-2 mb-2">
-          <h3 className="text-large-bold md:heading-5-bold">{name}</h3>
+        <div className="flex justify-between gap-2 md:gap-4 items-center mt-1.5 md:mt-2 mb-1.5 md:mb-2">
+          <h3 className="text-sm font-bold md:heading-5-bold">{name}</h3>
 
           {rating > 0 && (
             <div className="flex items-center gap-0.75">
@@ -43,10 +43,10 @@ export const ProductCard: FC<ProductCardProps> = ({
         </div>
       </div>
 
-      <div className="mb-2 border-t border-border" />
+      <div className="mb-1.5 md:mb-2 border-t border-border" />
 
-      <div className="flex flex-col gap-4 mb-4">
-        <div className="flex items-center justify-between px-4">
+      <div className="flex flex-col gap-2 md:gap-4 mb-3 md:mb-4">
+        <div className="flex items-center justify-between px-3 md:px-4">
           <div className="flex items-baseline gap-0.75 text-large-bold text-primary">
             <span>{price}</span>
             <span>ج.م</span>
@@ -55,7 +55,7 @@ export const ProductCard: FC<ProductCardProps> = ({
           <AppButton
             asChild
             appVariant="secondary"
-            className="text-regular-medium! px-4! h-12!"
+            className="text-xs! md:text-regular-medium! px-3! md:px-4! h-8! md:h-12!"
           >
             <Link href={`/product/${slug || id}`}>أحجز الآن</Link>
           </AppButton>
