@@ -99,14 +99,14 @@ export function OrdersTable({
                     {STATUS_LABELS[order.status]}
                   </span>
                 </TableCell>
-                <TableCell className="text-sm font-medium px-1 text-center whitespace-nowrap">{formatOrderDate(order.createdAt)}</TableCell>
-                <TableCell className="px-1">
+                <TableCell className="text-sm font-medium px-2 text-center whitespace-nowrap">{formatOrderDate(order.createdAt)}</TableCell>
+                <TableCell className="px-2 text-center">
                   <button
                     onClick={() => onEdit(order)}
                     disabled={order.status === "RECEIVED" || loadingId === order.id}
-                    className="w-full h-7 rounded-lg bg-[#1D4734] hover:bg-[#153627] text-white text-xs font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                    className="w-7 h-7 rounded-md bg-[#1D4734] hover:bg-[#153627] text-white text-sm font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer mx-auto flex items-center justify-center"
                   >
-                    {loadingId === order.id ? "..." : "✓"}
+                    {loadingId === order.id ? "·" : "✓"}
                   </button>
                 </TableCell>
                 <TableCell className="text-center px-1">
