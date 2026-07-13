@@ -4,7 +4,6 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
 import { OrderStatus } from "@/generated/prisma/enums";
 import { sendPushToAdmins } from "@/lib/push";
-import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET(request: NextRequest) {
   try {
@@ -115,17 +114,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const adminSession = await getServerSession();
-    const isAdmin = adminSession?.user?.role === "ADMIN";
-
-    if (!isAdmin) {
-      const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-      const { allowed } = await rateLimit(ip);
-      if (!allowed) {
-        return NextResponse.json({ error: "طلبات كثيرة، حاول بعد دقيقة" }, { status: 429 });
-      }
-    }
-
     const body = await request.json();
 
     const {
