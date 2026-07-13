@@ -391,6 +391,7 @@ export const ModelName = {
   Product: 'Product',
   Order: 'Order',
   PushSubscription: 'PushSubscription',
+  IpRateLimit: 'IpRateLimit',
   Review: 'Review'
 } as const
 
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "product" | "order" | "pushSubscription" | "review"
+    modelProps: "user" | "session" | "account" | "verification" | "product" | "order" | "pushSubscription" | "ipRateLimit" | "review"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -929,6 +930,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    IpRateLimit: {
+      payload: Prisma.$IpRateLimitPayload<ExtArgs>
+      fields: Prisma.IpRateLimitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.IpRateLimitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.IpRateLimitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>
+        }
+        findFirst: {
+          args: Prisma.IpRateLimitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.IpRateLimitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>
+        }
+        findMany: {
+          args: Prisma.IpRateLimitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>[]
+        }
+        create: {
+          args: Prisma.IpRateLimitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>
+        }
+        createMany: {
+          args: Prisma.IpRateLimitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.IpRateLimitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>[]
+        }
+        delete: {
+          args: Prisma.IpRateLimitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>
+        }
+        update: {
+          args: Prisma.IpRateLimitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>
+        }
+        deleteMany: {
+          args: Prisma.IpRateLimitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.IpRateLimitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.IpRateLimitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>[]
+        }
+        upsert: {
+          args: Prisma.IpRateLimitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$IpRateLimitPayload>
+        }
+        aggregate: {
+          args: Prisma.IpRateLimitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateIpRateLimit>
+        }
+        groupBy: {
+          args: Prisma.IpRateLimitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IpRateLimitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.IpRateLimitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.IpRateLimitCountAggregateOutputType> | number
+        }
+      }
+    }
     Review: {
       payload: Prisma.$ReviewPayload<ExtArgs>
       fields: Prisma.ReviewFieldRefs
@@ -1149,6 +1224,15 @@ export const PushSubscriptionScalarFieldEnum = {
 } as const
 
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
+export const IpRateLimitScalarFieldEnum = {
+  ip: 'ip',
+  count: 'count',
+  resetAt: 'resetAt'
+} as const
+
+export type IpRateLimitScalarFieldEnum = (typeof IpRateLimitScalarFieldEnum)[keyof typeof IpRateLimitScalarFieldEnum]
 
 
 export const ReviewScalarFieldEnum = {
@@ -1417,6 +1501,7 @@ export type GlobalOmitConfig = {
   product?: Prisma.ProductOmit
   order?: Prisma.OrderOmit
   pushSubscription?: Prisma.PushSubscriptionOmit
+  ipRateLimit?: Prisma.IpRateLimitOmit
   review?: Prisma.ReviewOmit
 }
 

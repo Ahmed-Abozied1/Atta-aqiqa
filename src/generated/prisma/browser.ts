@@ -53,6 +53,11 @@ export type Order = Prisma.OrderModel
  */
 export type PushSubscription = Prisma.PushSubscriptionModel
 /**
+ * Model IpRateLimit
+ * 
+ */
+export type IpRateLimit = Prisma.IpRateLimitModel
+/**
  * Model Review
  * 
  */

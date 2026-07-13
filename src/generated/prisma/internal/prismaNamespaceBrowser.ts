@@ -58,6 +58,7 @@ export const ModelName = {
   Product: 'Product',
   Order: 'Order',
   PushSubscription: 'PushSubscription',
+  IpRateLimit: 'IpRateLimit',
   Review: 'Review'
 } as const
 
@@ -184,6 +185,15 @@ export const PushSubscriptionScalarFieldEnum = {
 } as const
 
 export type PushSubscriptionScalarFieldEnum = (typeof PushSubscriptionScalarFieldEnum)[keyof typeof PushSubscriptionScalarFieldEnum]
+
+
+export const IpRateLimitScalarFieldEnum = {
+  ip: 'ip',
+  count: 'count',
+  resetAt: 'resetAt'
+} as const
+
+export type IpRateLimitScalarFieldEnum = (typeof IpRateLimitScalarFieldEnum)[keyof typeof IpRateLimitScalarFieldEnum]
 
 
 export const ReviewScalarFieldEnum = {
