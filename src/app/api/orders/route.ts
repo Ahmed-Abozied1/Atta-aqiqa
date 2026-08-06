@@ -134,8 +134,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "الكمية غير صحيحة" }, { status: 400 });
     }
 
-    // Fetch price from DB — never trust client-supplied price
-    const product = await prisma.product.findUnique({ where: { id: productId }, select: { price: true } });
+    // Fetch price + name from DB — never trust client-supplied price
+    const product = await prisma.product.findUnique({ where: { id: productId }, select: { price: true, name: true } });
     if (!product) {
       return NextResponse.json({ error: "المنتج غير موجود" }, { status: 404 });
     }
@@ -159,9 +159,20 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    const intentLabels: Record<string, string> = {
+      AQEEQA: "عقيقة",
+      ADHIYA: "أضحية",
+      NAZR: "نذر",
+      SADAKA: "صدقة",
+      KAFFARA: "كفارة",
+      BUY: "شراء",
+    };
+    const intentAr = intentLabels[intent] ?? intent;
+    const qtyPart = parsedQty > 1 ? ` ×${parsedQty}` : "";
+
     sendPushToAdmins(
-      "طلب جديد",
-      `${beneficiaryName} — ${order.orderNumber}`
+      `طلب جديد #${order.orderNumber}`,
+      `${product.name} · ${intentAr}${qtyPart} — ${beneficiaryName}`
     ).catch(() => {});
 
     return NextResponse.json(order, { status: 201 });
