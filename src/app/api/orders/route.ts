@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
 
     sendPushToAdmins(
       `طلب جديد #${order.orderNumber}`,
-      `${product.name} · ${intentAr}${qtyPart} — ${beneficiaryName}`
+      `${product.name} · ${intentAr}${qtyPart} — ${beneficiaryName}\n📞 ${phone}`
     ).catch(() => {});
 
     return NextResponse.json(order, { status: 201 });
