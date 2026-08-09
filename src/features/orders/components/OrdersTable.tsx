@@ -208,6 +208,10 @@ export function OrdersTable({
                 <span className="text-small-normal text-paragraph">{order.product?.name}</span>
               </div>
               <div className="flex gap-2 items-center flex-wrap">
+                <span className="text-small-bold text-title">نوع الحجز</span>
+                <span className="text-small-normal text-paragraph">{getIntentLabel(order.intent)}</span>
+              </div>
+              <div className="flex gap-2 items-center flex-wrap">
                 <span className="text-small-bold text-title">عدد الذبائح</span>
                 <span className="text-small-normal text-paragraph">{order.quantity ?? 1}</span>
               </div>
