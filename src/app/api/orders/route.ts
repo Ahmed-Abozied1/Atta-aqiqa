@@ -171,8 +171,8 @@ export async function POST(request: NextRequest) {
     const qtyPart = parsedQty > 1 ? ` ×${parsedQty}` : "";
 
     sendPushToAdmins(
-      `طلب جديد #${order.orderNumber}`,
-      `${product.name} · ${intentAr}${qtyPart} — ${beneficiaryName}\n📞 ${phone}`
+      `طلب ${intentAr} #${order.orderNumber}`,
+      `${product.name}${qtyPart} — ${beneficiaryName}\n📞 ${phone}`
     ).catch(() => {});
 
     return NextResponse.json(order, { status: 201 });
