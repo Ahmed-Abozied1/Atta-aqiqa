@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
+import { canManageOrders } from "@/lib/roles";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession();
-  if (!session?.user || session.user.role !== "ADMIN") {
+  if (!session?.user || !canManageOrders(session.user.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

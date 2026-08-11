@@ -5,12 +5,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-export const SidebarMenu = () => {
+export const SidebarMenu = ({ role }: { role?: string }) => {
   const pathname = usePathname();
+
+  // موظف الطلبات (STAFF) يشوف رابط الطلبات فقط
+  const items = role === "ADMIN"
+    ? MENU_ITEMS
+    : MENU_ITEMS.filter((item) => (item as { staff?: boolean }).staff);
 
   return (
     <ul className="flex-1 p-4">
-      {MENU_ITEMS.map((item) => {
+      {items.map((item) => {
         const Icon = item.icon;
         const isActive = pathname === item.href || (item.href !== "/admin" && pathname?.startsWith(item.href));
 

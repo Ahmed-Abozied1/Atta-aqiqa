@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
+import { canManageOrders } from "@/lib/roles";
 import { OrderStatus } from "@/generated/prisma/enums";
 import { sendPushToAdmins } from "@/lib/push";
 
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession();
 
-    if (!session?.user || session.user.role !== "ADMIN") {
+    if (!session?.user || !canManageOrders(session.user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

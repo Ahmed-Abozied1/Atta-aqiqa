@@ -26,7 +26,7 @@ const Sidebar = ({ className, user }: { className?: string; user: User }) => {
           <AtaaLogo width={68} height={96} />
         </div>
 
-        <SidebarMenu />
+        <SidebarMenu role={displayUser.role} />
       </div>
 
       <Link href="/admin/profile">
@@ -43,7 +43,7 @@ const Sidebar = ({ className, user }: { className?: string; user: User }) => {
               {displayUser.name.split(" ").slice(0, 2).join(" ")}
             </span>
             <span className="text-small-normal text-paragraph">
-              {displayUser.role === "ADMIN" && "الأدمن"}
+              {displayUser.role === "ADMIN" ? "الأدمن" : displayUser.role === "STAFF" ? "موظف طلبات" : ""}
             </span>
           </div>
         </div>

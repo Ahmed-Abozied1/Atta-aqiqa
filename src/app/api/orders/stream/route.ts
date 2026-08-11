@@ -1,12 +1,13 @@
 import { NextRequest } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
+import { canManageOrders } from "@/lib/roles";
 
 export const maxDuration = 60;
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession();
-  if (!session?.user || session.user.role !== "ADMIN") {
+  if (!session?.user || !canManageOrders(session.user.role)) {
     return new Response("Forbidden", { status: 403 });
   }
 

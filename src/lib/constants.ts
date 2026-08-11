@@ -131,7 +131,7 @@ export const FAQ_DATA = [
 export const MENU_ITEMS = [
   { name: "لوحة التحكم", icon: Dashboard, href: "/admin", active: true },
   { name: "إدارة الحسابات", icon: UserMultiple, href: "/admin/accounts" },
-  { name: "إدارة الطلبات", icon: ShoppingCart, href: "/admin/orders" },
+  { name: "إدارة الطلبات", icon: ShoppingCart, href: "/admin/orders", staff: true },
   { name: "إدارة المنتجات", icon: Package, href: "/admin/products" },
   { name: "إدارة التقييمات", icon: Star, href: "/admin/reviews" },
 ];

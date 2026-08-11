@@ -11,17 +11,32 @@ export async function proxy(request: NextRequest) {
     headers: request.headers,
   });
 
-  // 1. إذا كان المستخدم ADMIN ويحاول فتح الصفحة الرئيسية '/'
+  const role = (session?.user as any)?.role;
+
+  // 1. توجيه المستخدم من الصفحة الرئيسية '/' حسب دوره
   if (pathname === '/') {
-    if (session?.user && (session.user as any).role === "ADMIN") {
+    if (session?.user && role === "ADMIN") {
       return NextResponse.redirect(new URL('/admin', request.url));
+    }
+    if (session?.user && role === "STAFF") {
+      return NextResponse.redirect(new URL('/admin/orders', request.url));
     }
   }
 
-  // 2. حماية مسار الأدمن من المستخدمين العاديين
+  // 2. حماية مسار الأدمن
   if (pathname.startsWith('/admin')) {
-    if (!session || (session.user as any).role !== "ADMIN") {
+    // مسموح فقط للأدمن الكامل أو موظف الطلبات
+    if (!session || (role !== "ADMIN" && role !== "STAFF")) {
       return NextResponse.redirect(new URL('/', request.url));
+    }
+    // موظف الطلبات (STAFF) يوصل للطلبات وصفحته الشخصية فقط
+    if (role === "STAFF") {
+      const allowed =
+        pathname.startsWith('/admin/orders') ||
+        pathname.startsWith('/admin/profile');
+      if (!allowed) {
+        return NextResponse.redirect(new URL('/admin/orders', request.url));
+      }
     }
   }
 
