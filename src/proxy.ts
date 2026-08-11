@@ -29,10 +29,11 @@ export async function proxy(request: NextRequest) {
     if (!session || (role !== "ADMIN" && role !== "STAFF")) {
       return NextResponse.redirect(new URL('/', request.url));
     }
-    // موظف الطلبات (STAFF) يوصل للطلبات وصفحته الشخصية فقط
+    // موظف الطلبات (STAFF) يوصل للطلبات والأرشيف وصفحته الشخصية فقط
     if (role === "STAFF") {
       const allowed =
         pathname.startsWith('/admin/orders') ||
+        pathname.startsWith('/admin/archive') ||
         pathname.startsWith('/admin/profile');
       if (!allowed) {
         return NextResponse.redirect(new URL('/admin/orders', request.url));
