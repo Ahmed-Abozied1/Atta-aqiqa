@@ -121,7 +121,7 @@ export default function RootLayout({
           <>
             <Script
               id="fb-pixel"
-              strategy="afterInteractive"
+              strategy="beforeInteractive"
               dangerouslySetInnerHTML={{
                 __html: `
                   !function(f,b,e,v,n,t,s)
@@ -133,7 +133,6 @@ export default function RootLayout({
                   s.parentNode.insertBefore(t,s)}(window, document,'script',
                   'https://connect.facebook.net/en_US/fbevents.js');
                   fbq('init', '${pixelId}');
-                  fbq('track', 'PageView');
                 `,
               }}
             />

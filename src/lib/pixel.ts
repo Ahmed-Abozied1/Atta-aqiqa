@@ -7,58 +7,35 @@ declare global {
   }
 }
 
-export const pageview = () => {
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", "PageView");
-  }
-};
-
-export const viewContent = (params: {
+type ProductParams = {
   content_name: string;
   content_ids: string[];
   value: number;
+  num_items?: number;
   currency?: string;
-}) => {
+};
+
+const track = (event: string, params?: Record<string, unknown>) => {
   if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", "ViewContent", {
-      ...params,
-      currency: params.currency ?? "EGP",
-    });
+    window.fbq("track", event, params);
   }
 };
 
-export const initiateCheckout = (params: {
-  content_name: string;
-  content_ids: string[];
-  value: number;
-  num_items: number;
-  currency?: string;
-}) => {
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", "InitiateCheckout", {
-      ...params,
-      currency: params.currency ?? "EGP",
-    });
-  }
-};
+const withCurrency = (params: ProductParams) => ({
+  ...params,
+  content_type: "product",
+  currency: params.currency ?? "EGP",
+});
 
-export const purchase = (params: {
-  content_name: string;
-  content_ids: string[];
-  value: number;
-  num_items: number;
-  currency?: string;
-}) => {
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", "Purchase", {
-      ...params,
-      currency: params.currency ?? "EGP",
-    });
-  }
-};
+export const pageview = () => track("PageView");
 
-export const completeRegistration = () => {
-  if (typeof window !== "undefined" && window.fbq) {
-    window.fbq("track", "CompleteRegistration");
-  }
-};
+export const viewContent = (params: ProductParams) => track("ViewContent", withCurrency(params));
+
+export const initiateCheckout = (params: ProductParams) =>
+  track("InitiateCheckout", withCurrency(params));
+
+export const lead = (params: ProductParams) => track("Lead", withCurrency(params));
+
+export const purchase = (params: ProductParams) => track("Purchase", withCurrency(params));
+
+export const completeRegistration = () => track("CompleteRegistration");

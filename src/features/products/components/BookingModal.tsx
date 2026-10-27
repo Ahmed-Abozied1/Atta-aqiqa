@@ -11,7 +11,7 @@ import { useSession } from "@/features/auth/hooks/useAuth";
 import { BookingModalData, PhoneObject } from "../types/product.types";
 import { useCreateOrder } from "../hooks/useCreateOrder";
 import { BOOKING_STEPS } from "../constants";
-import { purchase } from "@/lib/pixel";
+import { lead, purchase } from "@/lib/pixel";
 
 export const BookingModal = () => {
   const { isOpen, close, data, open } = useModalStore();
@@ -96,6 +96,15 @@ export const BookingModal = () => {
     if (isSummaryStep) {
       await handleSubmitOrder();
       return;
+    }
+
+    if (isDataStep && modalData) {
+      lead({
+        content_name: modalData.productName,
+        content_ids: [modalData.productId],
+        value: modalData.price * Math.max(1, Math.floor(quantity)),
+        num_items: Math.max(1, Math.floor(quantity)),
+      });
     }
 
     const lastStep = 2;
