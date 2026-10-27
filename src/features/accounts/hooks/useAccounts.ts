@@ -5,7 +5,7 @@ import { ITEMS_PER_PAGE } from '../constants/accounts.constants'
 
 const initialFilters: AccountsFilters = {
   searchTerm: '',
-  role: 'all',
+  role: 'customers',
   status: 'all',
   sortBy: 'newest',
 }
@@ -76,7 +76,7 @@ export function useAccounts() {
   }, [])
 
   const resetFilters = useCallback(() => {
-    setFilters(initialFilters)
+    setFilters(prev => ({ ...initialFilters, role: prev.role }))
     setCurrentPage(1)
   }, [])
 
@@ -86,6 +86,7 @@ export function useAccounts() {
   ) => {
     setFilters(prev => ({ ...prev, [key]: value }))
     setCurrentPage(1)
+    if (key === 'role') setSelectedRows([])
   }, [])
 
   return {

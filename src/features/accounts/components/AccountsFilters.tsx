@@ -11,7 +11,6 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { AccountsFilters as Filters } from "../types/accounts.types"
-import { ROLE_OPTIONS } from "../constants/accounts.constants"
 import { FilterHorizontal } from "@/components/ui/icons/FilterHorizontal"
 import { Search } from "@/components/ui/icons/Search"
 
@@ -66,27 +65,6 @@ export function AccountsFilters({
                   <div key={option.value} className="flex items-center gap-2 cursor-pointer">
                     <RadioGroupItem value={option.value} id={`sort-${option.value}`} />
                     <Label htmlFor={`sort-${option.value}`} className="text-regular-normal! md:text-medium-normal! text-title! cursor-pointer">
-                      {option.label}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            </div>
-
-            <hr className="border-border" />
-
-            <div>
-              <h4 className="text-title text-medium-bold md:heading-6-bold mb-4 text-right">الدور:</h4>
-              <RadioGroup 
-                value={filters.role || 'all'} 
-                onValueChange={(val) => handleFilterUpdate('role', val)} 
-                dir="rtl" 
-                className="space-y-2"
-              >
-                {ROLE_OPTIONS.map((option) => (
-                  <div key={option.value} className="flex items-center gap-2 cursor-pointer">
-                    <RadioGroupItem value={option.value} id={`role-${option.value}`} />
-                    <Label htmlFor={`role-${option.value}`} className="text-regular-normal! md:text-medium-normal! text-title! cursor-pointer">
                       {option.label}
                     </Label>
                   </div>

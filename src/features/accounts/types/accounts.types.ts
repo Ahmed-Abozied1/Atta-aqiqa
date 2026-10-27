@@ -1,4 +1,6 @@
-export type UserRole = 'ADMIN' | 'USER';
+export type UserRole = 'ADMIN' | 'STAFF' | 'USER';
+
+export type AccountsTab = 'customers' | 'team';
 
 export interface User {
   emailVerified: boolean;
@@ -18,7 +20,7 @@ export interface User {
 
 export interface AccountsFilters {
   searchTerm: string;
-  role: string;
+  role: AccountsTab;
   status: string;
   sortBy: string;
 }

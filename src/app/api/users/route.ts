@@ -20,7 +20,8 @@ export async function GET(request: NextRequest) {
     const getAll = searchParams.get("getAll") === "true"
 
     const conditions: any[] = []
-    if (role !== "all") conditions.push({ role: role.toUpperCase() })
+    if (role === "team") conditions.push({ role: { in: ["ADMIN", "STAFF"] } })
+    else if (role === "customers") conditions.push({ role: "USER" })
     if (status !== "all") conditions.push({ isActive: status === "active" })
     if (searchTerm) {
       conditions.push({
@@ -45,13 +46,10 @@ export async function GET(request: NextRequest) {
           name: true,
           email: true,
           phone: true,
+          role: true,
           isActive: true,
           createdAt: true,
-          _count: {
-    select: {
-      orders: true // هذا سيجلب إجمالي عدد الطلبات للمستخدم
-    }
-  }
+          _count: { select: { orders: true } },
         },
         orderBy,
       })
@@ -68,8 +66,10 @@ export async function GET(request: NextRequest) {
           name: true,
           email: true,
           phone: true,
+          role: true,
           isActive: true,
           createdAt: true,
+          _count: { select: { orders: true } },
         },
         orderBy,
       }),

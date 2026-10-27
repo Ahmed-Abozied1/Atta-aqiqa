@@ -8,6 +8,8 @@ import { AccountsFilters } from "./AccountsFilters"
 import { prepareUsersExportData, convertToCSV, downloadCSV } from "../utils/accounts.utils"
 import { toast } from "sonner"
 import { SkeletonTable } from "@/components/common/SkeletonTable"
+import { ACCOUNTS_TABS } from "../constants/accounts.constants"
+import { cn } from "@/lib/utils"
 
 export default function AccountsManagement() {
   const {
@@ -30,7 +32,7 @@ export default function AccountsManagement() {
     try {
       const exportData = prepareUsersExportData(allUsers)
       const csv = convertToCSV(exportData)
-      downloadCSV(csv, 'users.csv')
+      downloadCSV(csv, filters.role === 'team' ? 'team.csv' : 'customers.csv')
       toast.success("تم تصدير البيانات بنجاح")
     } catch {
       toast.error("حدث خطأ أثناء تصدير البيانات")
@@ -41,6 +43,24 @@ export default function AccountsManagement() {
   return (
     <div className="bg-card min-h-screen" dir="rtl">
       <h2 className="heading-5-bold md:heading-4-bold text-title mb-6 md:mb-8">إدارة الحسابات</h2>
+
+      <div className="flex gap-2 md:gap-3 mb-4 md:mb-6">
+        {ACCOUNTS_TABS.map((tab) => (
+          <button
+            key={tab.value}
+            type="button"
+            onClick={() => updateFilter('role', tab.value)}
+            className={cn(
+              "h-10 md:h-12 px-4 md:px-6 rounded-lg md:rounded-2xl text-small-bold md:text-medium-bold transition-colors",
+              filters.role === tab.value
+                ? "bg-primary text-bg"
+                : "bg-bg border border-border text-paragraph hover:text-title"
+            )}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       <div className="bg-bg rounded-2xl border border-card p-4 md:p-6">
         <div className="flex items-center justify-between gap-4 mb-4 md:mb-6">
@@ -63,12 +83,13 @@ export default function AccountsManagement() {
         {isLoading ? (
           <SkeletonTable columns={7} rows={10} />
         ) : (
-          <div className="hidden md:block">
+          <div>
             <AccountsTable
               users={users}
               selectedRows={selectedRows}
               currentPage={currentPage}
               itemsPerPage={itemsPerPage}
+              isTeam={filters.role === 'team'}
               onSelectAll={handleSelectAll}
               onSelectRow={handleSelectRow}
             />

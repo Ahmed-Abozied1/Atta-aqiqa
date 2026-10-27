@@ -2,7 +2,8 @@ export const ITEMS_PER_PAGE = 10
 
 export const ROLE_LABELS = {
   ADMIN: 'أدمن',
-  USER: 'مستخدم',
+  STAFF: 'موظف طلبات',
+  USER: 'عميل',
 } as const
 
 export const STATUS_LABELS = {
@@ -10,14 +11,7 @@ export const STATUS_LABELS = {
   inactive: 'غير نشط',
 } as const
 
-export const ROLE_OPTIONS = [
-  { value: 'all', label: 'الكل' },
-  { value: 'ADMIN', label: ROLE_LABELS.ADMIN },
-  { value: 'USER', label: ROLE_LABELS.USER },
-] as const
-
-export const STATUS_OPTIONS = [
-  { value: 'all', label: 'الكل' },
-  { value: 'active', label: STATUS_LABELS.active },
-  { value: 'inactive', label: STATUS_LABELS.inactive },
+export const ACCOUNTS_TABS = [
+  { value: 'customers', label: 'العملاء' },
+  { value: 'team', label: 'فريق العمل' },
 ] as const

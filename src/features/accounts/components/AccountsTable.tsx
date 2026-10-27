@@ -12,13 +12,14 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { User } from "../types/accounts.types";
-import { formatUserDate } from "../utils/accounts.utils";
+import { formatUserDate, getRoleLabel } from "../utils/accounts.utils";
 
 interface AccountsTableProps {
   users: User[];
   selectedRows: string[];
   currentPage: number;
   itemsPerPage: number;
+  isTeam?: boolean;
   onSelectAll: (checked: boolean) => void;
   onSelectRow: (id: string, checked: boolean) => void;
 }
@@ -28,6 +29,7 @@ export function AccountsTable({
   selectedRows,
   currentPage,
   itemsPerPage,
+  isTeam = false,
   onSelectAll,
   onSelectRow,
 }: AccountsTableProps) {
@@ -76,7 +78,7 @@ export function AccountsTable({
                 رقم الهاتف
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
-                عدد الحجوزات
+                {isTeam ? "الدور" : "عدد الحجوزات"}
               </TableHead>
               <TableHead className="py-4.75 text-title text-center font-bold">
                 الحالة
@@ -109,7 +111,15 @@ export function AccountsTable({
                 <TableCell>{user.name}</TableCell>
                 <TableCell className="ltr">{user.email}</TableCell>
                 <TableCell>{user.phone || "-"}</TableCell>
-                <TableCell>{user._count?.orders || 0}</TableCell>
+                <TableCell>
+                  {isTeam ? (
+                    <span className="px-4 py-2 rounded-full text-xs font-bold bg-primary/10 text-primary">
+                      {getRoleLabel(user.role)}
+                    </span>
+                  ) : (
+                    user._count?.orders || 0
+                  )}
+                </TableCell>
                 <TableCell>
                   <span
                     className={cn(
@@ -171,6 +181,15 @@ export function AccountsTable({
                 </span>
                 <span className="text-small-normal text-paragraph">
                   {user.phone || "-"}
+                </span>
+              </div>
+
+              <div className="flex gap-2 items-center flex-wrap">
+                <span className="text-small-bold text-title">
+                  {isTeam ? "الدور" : "عدد الحجوزات"}
+                </span>
+                <span className="text-small-normal text-paragraph">
+                  {isTeam ? getRoleLabel(user.role) : user._count?.orders || 0}
                 </span>
               </div>
 

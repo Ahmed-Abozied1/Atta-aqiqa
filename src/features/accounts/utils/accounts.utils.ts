@@ -23,10 +23,6 @@ export const filterUsers = (users: User[], filters: AccountsFilters): User[] => 
     )
   }
 
-  if (filters.role && filters.role !== 'all') {
-    filtered = filtered.filter(user => user.role === filters.role)
-  }
-
   if (filters.status && filters.status !== 'all') {
     const isActive = filters.status === 'active'
     filtered = filtered.filter(user => user.emailVerified === isActive)
