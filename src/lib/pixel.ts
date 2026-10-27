@@ -27,6 +27,16 @@ const withCurrency = (params: ProductParams) => ({
   currency: params.currency ?? "EGP",
 });
 
+export const setUserData = (user: { phone: string; name?: string }) => {
+  if (typeof window === "undefined" || !window.fbq || !FB_PIXEL_ID) return;
+  const [firstName, ...rest] = (user.name ?? "").trim().split(/\s+/);
+  window.fbq("init", FB_PIXEL_ID, {
+    ph: user.phone.replace(/\D/g, ""),
+    ...(firstName && { fn: firstName.toLowerCase() }),
+    ...(rest.length && { ln: rest.join(" ").toLowerCase() }),
+  });
+};
+
 export const pageview = () => track("PageView");
 
 export const viewContent = (params: ProductParams) => track("ViewContent", withCurrency(params));

@@ -11,7 +11,7 @@ import { useSession } from "@/features/auth/hooks/useAuth";
 import { BookingModalData, PhoneObject } from "../types/product.types";
 import { useCreateOrder } from "../hooks/useCreateOrder";
 import { BOOKING_STEPS } from "../constants";
-import { lead, purchase } from "@/lib/pixel";
+import { lead, purchase, setUserData } from "@/lib/pixel";
 
 export const BookingModal = () => {
   const { isOpen, close, data, open } = useModalStore();
@@ -99,6 +99,7 @@ export const BookingModal = () => {
     }
 
     if (isDataStep && modalData) {
+      setUserData({ phone: `${phone.country}${phone.number}`, name });
       lead({
         content_name: modalData.productName,
         content_ids: [modalData.productId],
