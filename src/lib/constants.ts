@@ -9,7 +9,7 @@ export const NAV_LINKS = [
   { name: "الرئيسية", href: "/" },
   { name: "الأسئلة الشائعة", href: "/#faq" },
   { name: "آراء العملاء", href: "/#testimonials" },
-  { name: "تواصل معنا", href: "https://wa.me/201287548945", isExternal: true },
+  { name: "تواصل معنا", href: "https://wa.me/201505990896", isExternal: true },
 ];
 
 export const SOCIAL_LINKS = [
@@ -149,9 +149,9 @@ export const FOOTER_LINK1 = [
   ];
 
   export const FOOTER_LINK2 = [
-    { name: "للشكاوى والاقتراحات", href: "https://wa.me/201287548945" },
+    { name: "للشكاوى والاقتراحات", href: "https://wa.me/201505990896" },
     { name: "دليلك لاختيار الأضحية والعقيقة", href: "/guide" },
-    { name: "تواصل معنا", href: "https://wa.me/201287548945" },
+    { name: "تواصل معنا", href: "https://wa.me/201505990896" },
   ];
 
 

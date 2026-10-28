@@ -7,7 +7,7 @@ const contacts = [
     { 
       name: "واتس اب", 
       icon: WhatsApp, 
-      href: "https://wa.me/201287548945" 
+      href: "https://wa.me/201505990896" 
     },
     { 
       name: "الهاتف", 
