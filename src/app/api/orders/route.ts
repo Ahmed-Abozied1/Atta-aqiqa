@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse, after } from "next/server";
 import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "@/lib/get-session";
@@ -171,10 +171,15 @@ export async function POST(request: NextRequest) {
     const intentAr = intentLabels[intent] ?? intent;
     const qtyPart = parsedQty > 1 ? ` ×${parsedQty}` : "";
 
-    sendPushToAdmins(
-      `طلب ${intentAr} #${order.orderNumber}`,
-      `${product.name}${qtyPart} — ${beneficiaryName}\n📞 ${phone}`
-    ).catch(() => {});
+    // after() = يبعت الإشعار بعد الرد على العميل، والسيرفر (Vercel) يفضل شغال لحد ما يخلص
+    // (من غيرها الـ function كانت بتقفل قبل ما الإشعار يتبعت فيتأخر أو يضيع)
+    after(() =>
+      sendPushToAdmins(
+        `طلب ${intentAr} #${order.orderNumber}`,
+        `${product.name}${qtyPart} — ${beneficiaryName}\n📞 ${phone}`,
+        { tag: `order-${order.id}`, url: "/admin/orders" }
+      ).catch((err) => console.error("[push] failed:", err))
+    );
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {

@@ -22,9 +22,14 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
+// AudioContext واحد بس — الموبايل بيحدد عدد محدود، وعمل واحد جديد كل مرة كان بيعلّق الصوت
+let audioCtx: AudioContext | null = null;
+
 function playChime() {
   try {
-    const ctx = new AudioContext();
+    audioCtx ??= new AudioContext();
+    const ctx = audioCtx;
+    if (ctx.state === "suspended") ctx.resume().catch(() => {});
     const notes = [880, 1100];
     notes.forEach((freq, i) => {
       const osc = ctx.createOscillator();
@@ -118,15 +123,35 @@ export function useOrders(archived = false) {
     return () => navigator.serviceWorker.removeEventListener("message", handleMessage);
   }, [fetchOrders]);
 
-  // Fallback polling كل 60 ثانية — فقط لو الـ push مش شغال
+  // Fallback polling — أسرع لو الـ push مش شغال، وأبطأ لو شغال (احتياطي لو push ضاع)
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!hasPushRef.current) {
-        fetchOrders(true);
-      }
-    }, 60000);
+      if (document.visibilityState !== "visible") return;
+      fetchOrders(true);
+    }, hasPushRef.current ? 120000 : 30000);
     return () => clearInterval(interval);
   }, [fetchOrders]);
+
+  // لما الموظف يرجع للتاب/التطبيق على الموبايل، حدّث الطلبات فوراً
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") fetchOrders(true);
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [fetchOrders]);
+
+  // المتصفح مش بيسمح بالصوت غير بعد أول لمسة — نفك قفل الصوت عند أول تفاعل
+  useEffect(() => {
+    const unlock = () => {
+      try {
+        audioCtx ??= new AudioContext();
+        if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
+      } catch {}
+    };
+    window.addEventListener("pointerdown", unlock, { once: true });
+    return () => window.removeEventListener("pointerdown", unlock);
+  }, []);
 
   const archiveOrder = useCallback(async (id: string) => {
     const previous = data;
